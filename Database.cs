@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.IO;
-using WebApplication1.Entities;
+using WebApplication1.Models;
 
 public class Database : DbContext
 {
