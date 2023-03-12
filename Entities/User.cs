@@ -24,5 +24,9 @@ namespace WebApplication1.Models
         [Required]
         [Column("date_of_birth")]
         public DateTime DateOfBirth { get; set; }
+
+        [Required]
+        [Column("hashed_password")]
+        public string HashedPassword { get; set; }
     }
 }
