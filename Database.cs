@@ -5,16 +5,17 @@ using WebApplication1.Models;
 
 public class Database : DbContext
 {
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        IConfigurationRoot configuration = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json")
-            .Build();
-
-        optionsBuilder.UseMySQL(configuration.GetConnectionString("MySqlConnection"));
-    }
+    public Database(DbContextOptions<Database> options) : base(options) { }
 
     public DbSet<User> Users { get; set; }
+    public DbSet<Classified> Classifieds { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Classified>()
+            .HasOne(c => c.User)
+            .WithMany(u => u.Classifieds)
+            .HasForeignKey(c => c.UserId);
+    }
 }
 

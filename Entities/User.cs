@@ -27,6 +27,8 @@ namespace WebApplication1.Models
 
         [Required]
         [Column("hashed_password")]
-        public string HashedPassword { get; set; }
+        public string HashedPassword { get; set; } = string.Empty;
+
+        public List<Classified>? Classifieds { get; set; }
     }
 }
