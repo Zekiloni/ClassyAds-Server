@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WebApplication1.Models
 {
-    [Table("users")]
+    [Table("categories")]
     public class Category
     {
         [Key]
@@ -18,7 +18,6 @@ namespace WebApplication1.Models
         [Required]
         [Column("created_at")]
         public DateTime CreatedAt { get; set; } = DateTime.Now;
-
         public List<Classified>? Classifieds { get; set; }
     }
 }

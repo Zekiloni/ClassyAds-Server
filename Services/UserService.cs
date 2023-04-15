@@ -45,5 +45,14 @@ namespace WebApplication1.Services
         {
             return await _database.Users.ToListAsync();
         }
+
+        public async Task<IEnumerable<Classified>?> GetUserClassifieds(int userId)
+        {
+            var user = await _database.Users
+                .Include(u => u.Classifieds)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            return (user is not null) ? user.Classifieds : null;
+        }
     }
 }

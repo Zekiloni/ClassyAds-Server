@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
+using WebApplication1.Interfaces;
 using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
@@ -11,20 +9,20 @@ namespace WebApplication1.Controllers
     [ApiController]
     public class ClassifiedsController : ControllerBase
     {
-        private readonly IConfiguration configuration;
-        private readonly Database database;
+        private readonly IConfiguration _configuration;
+        private readonly IClassifiedService _classifieds;
 
-        public ClassifiedsController(Database dbContext, IConfiguration config)
+        public ClassifiedsController(IClassifiedService classifieds, IConfiguration config)
         {
-            configuration = config;
-            database = dbContext;
+            _configuration = config;
+            _classifieds = classifieds;
         }
 
         [HttpGet("/classifieds/{classifiedId}")]
         [Authorize]
         public async Task<IActionResult> GetClassifiedById(int classifiedId)
         {
-            var classified = await database.Classifieds.FirstOrDefaultAsync(c => c.Id == classifiedId);
+            var classified = await _classifieds.GetClassifiedById(classifiedId);
 
             if (classified == null)
             {
@@ -53,8 +51,14 @@ namespace WebApplication1.Controllers
                 return BadRequest();
             }
 
+            try
+            {
+                await _classifieds.CreateClassified(classified);
+            }
+            catch (Exception errorCreating) {
+                return BadRequest(errorCreating);
+            }
 
-            await database.SaveChangesAsync();
 
             return Ok(classified);
         }

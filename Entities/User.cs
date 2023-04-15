@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using WebApplication1.Enums;
 
 namespace WebApplication1.Models
 {
@@ -29,6 +31,21 @@ namespace WebApplication1.Models
         [Column("hashed_password")]
         public string HashedPassword { get; set; } = string.Empty;
 
+        [Required]
+        [DefaultValue(0)]
+        [Column("administrator")]
+        public UserAdminLevel Administrator { get; set; }
+
         public List<Classified>? Classifieds { get; set; }
+
+
+        public bool IsAdmin {
+            get { return this.Administrator == UserAdminLevel.Administrator; }
+        }
+
+        public bool IsSuperAddmin
+        {
+            get { return this.Administrator == UserAdminLevel.SuperAdministrator; }
+        }
     }
 }

@@ -10,5 +10,6 @@ namespace WebApplication1.Interfaces
         Task CreateUser(User user);
         Task UpdateUser(User user);
         Task DeleteUser(User user);
+        Task<IEnumerable<Classified>?> GetUserClassifieds(int userId);
     }
 }

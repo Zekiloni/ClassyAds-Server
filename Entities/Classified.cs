@@ -47,10 +47,11 @@ namespace WebApplication1.Models
         public DateTime? UpdatedDate { get; set; }
 
         [Required]
-        [ForeignKey("UserId")]
+        [ForeignKey("user_id")]
         public int UserId { get; set; }
 
         public User? User { get; set; }
-
+         
+        public Category? Category { get; set; }
     }
 }
