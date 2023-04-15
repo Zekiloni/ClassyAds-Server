@@ -14,9 +14,17 @@ namespace WebApplication1.Models
         public int Id { get; set; }
 
         [Required]
+        [ForeignKey("category_id")]
+        public int CategoryId { get; set; }
+
+        [Required]
         [Column("title")]
         [MaxLength(50)]
         public string Title { get; set; } = string.Empty;
+
+        [Required]
+        [Column("short_description")]
+        public string ShortDescription { get; set; }
 
         [Required]
         [Column("description")]
@@ -43,5 +51,6 @@ namespace WebApplication1.Models
         public int UserId { get; set; }
 
         public User? User { get; set; }
+
     }
 }
