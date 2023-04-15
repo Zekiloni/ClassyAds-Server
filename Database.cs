@@ -17,7 +17,6 @@ public class Database : DbContext
             .WithMany(u => u.Classifieds)
             .HasForeignKey(c => c.UserId);
 
-        modelBuilder.Entity
     }
 }
 

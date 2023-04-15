@@ -6,44 +6,44 @@ namespace WebApplication1.Services
 {
     public class UserService : IUserService
     {
-        private readonly Database database;
+        private readonly Database _database;
 
         public UserService(Database dbContext)
         {
-            database = dbContext;
+            _database = dbContext;
         }
 
-        public async Task<User> GetUserById(string userId)
+        public async Task<User?> GetUserById(int userId)
         {
-            return await database.Users.FirstOrDefaultAsync(u => u.Id == int.Parse(userId));
+            return await _database.Users.FirstOrDefaultAsync(u => u.Id == userId);
+        }
+
+        public async Task<User?> GetUserByUsername(string username)
+        {
+            return await _database.Users.FirstOrDefaultAsync(u => u.Username == username);
         }
 
         public async Task CreateUser(User user)
         {
-            await database.Users.AddAsync(user);
-            await database.SaveChangesAsync();
+            await _database.Users.AddAsync(user);
+            await _database.SaveChangesAsync();
         }
 
         public async Task UpdateUser(User user)
         {
-            database.Entry(user).State = EntityState.Modified;
-            await database.SaveChangesAsync();
+            _database.Entry(user).State = EntityState.Modified;
+            await _database.SaveChangesAsync();
         }
 
         public async Task DeleteUser(User user)
         {
-            database.Users.Remove(user);
-            await database.SaveChangesAsync();
+            _database.Users.Remove(user);
+            await _database.SaveChangesAsync();
         }
 
-        public Task<User> GetUserById(int userId)
+        public async Task<IEnumerable<User>> GetAllUsers()
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<User>> GetAllUsers()
-        {
-            throw new NotImplementedException();
+            return await _database.Users.ToListAsync();
         }
     }
 }

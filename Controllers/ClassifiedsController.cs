@@ -34,7 +34,7 @@ namespace WebApplication1.Controllers
             return Ok(classified);
         }
 
-        [HttpPost('/classifieds/create-new')]
+        [HttpPost("/classifieds/create")]
         [Authorize]
         public async Task<IActionResult> CreateClassified(int categoryId, string title, string shortDescription, string description)
         {
