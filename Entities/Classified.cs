@@ -54,4 +54,23 @@ namespace MyAds.Entities
 
         public Category? Category { get; set; }
     }
+
+    [Table("classified_photos")]
+    public class Photo
+    {
+        [Key]
+        [Column("id")]
+        public int Id { get; set; }
+
+        [Required]
+        [Column("url")]
+        public string Url { get; set; }
+
+        [ForeignKey("ClassifiedId")]
+        public Classified Classified { get; set; }
+
+        [Required]
+        [Column("classified_id")]
+        public int ClassifiedId { get; set; }
+    }
 }
