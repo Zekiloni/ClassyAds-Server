@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace WebApplication1.Migrations
 {
     [DbContext(typeof(Database))]
-    [Migration("20230331224058_InitialCreate")]
+    [Migration("20230416001411_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -18,8 +18,30 @@ namespace WebApplication1.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.3")
+                .HasAnnotation("ProductVersion", "7.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
+
+            modelBuilder.Entity("WebApplication1.Models.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("categories");
+                });
 
             modelBuilder.Entity("WebApplication1.Models.Classified", b =>
                 {
@@ -27,6 +49,9 @@ namespace WebApplication1.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("id");
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime(6)")
@@ -40,6 +65,11 @@ namespace WebApplication1.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)")
                         .HasColumnName("price");
+
+                    b.Property<string>("ShortDescription")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("short_description");
 
                     b.Property<int>("Status")
                         .HasColumnType("int")
@@ -60,6 +90,8 @@ namespace WebApplication1.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CategoryId");
+
                     b.HasIndex("UserId");
 
                     b.ToTable("classifieds");
@@ -71,6 +103,10 @@ namespace WebApplication1.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("id");
+
+                    b.Property<int>("Administrator")
+                        .HasColumnType("int")
+                        .HasColumnName("administrator");
 
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime(6)")
@@ -100,13 +136,26 @@ namespace WebApplication1.Migrations
 
             modelBuilder.Entity("WebApplication1.Models.Classified", b =>
                 {
+                    b.HasOne("WebApplication1.Models.Category", "Category")
+                        .WithMany("Classifieds")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("WebApplication1.Models.User", "User")
                         .WithMany("Classifieds")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Category");
+
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("WebApplication1.Models.Category", b =>
+                {
+                    b.Navigation("Classifieds");
                 });
 
             modelBuilder.Entity("WebApplication1.Models.User", b =>

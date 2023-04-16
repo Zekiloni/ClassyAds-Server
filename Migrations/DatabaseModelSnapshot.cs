@@ -101,6 +101,10 @@ namespace WebApplication1.Migrations
                         .HasColumnType("int")
                         .HasColumnName("id");
 
+                    b.Property<int>("Administrator")
+                        .HasColumnType("int")
+                        .HasColumnName("administrator");
+
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("date_of_birth");
