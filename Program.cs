@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using MyAds.Interfaces;
+using MyAds.Middlewares;
 using MyAds.Services;
 using System.Text;
 
@@ -29,11 +30,11 @@ builder.Services.AddDbContextPool<Database>(options =>
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IClassifiedService, ClassifiedService>();
 
+
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
 
 var key = Encoding.ASCII.GetBytes(configuration["Jwt:Secret"]!);
 builder.Services.AddAuthentication(options =>
@@ -54,8 +55,6 @@ builder.Services.AddAuthentication(options =>
 });
 
 
-
-
 var app = builder.Build();
 
 // pipeline
@@ -63,11 +62,13 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseDeveloperExceptionPage();
 }
 
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
+app.UseUserAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
