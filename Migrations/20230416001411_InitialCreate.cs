@@ -4,7 +4,7 @@ using MySql.EntityFrameworkCore.Metadata;
 
 #nullable disable
 
-namespace WebApplication1.Migrations
+namespace MyAds.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration

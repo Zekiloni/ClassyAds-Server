@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyAds.Interfaces;
-using WebApplication1.Models;
+using MyAds.Entities;
 
 namespace MyAds.Controllers
 {

@@ -6,8 +6,8 @@ using MyAds.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using WebApplication1.Models;
-using WebApplication1.Services;
+using MyAds.Entities;
+using MyAds.Services;
 
 [ApiController]
 [Route("[controller]")]

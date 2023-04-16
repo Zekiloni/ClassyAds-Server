@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace WebApplication1.Migrations
+namespace MyAds.Migrations
 {
     [DbContext(typeof(Database))]
     partial class DatabaseModelSnapshot : ModelSnapshot
@@ -18,7 +18,7 @@ namespace WebApplication1.Migrations
                 .HasAnnotation("ProductVersion", "7.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("WebApplication1.Models.Category", b =>
+            modelBuilder.Entity("MyAds.Models.Category", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -40,7 +40,7 @@ namespace WebApplication1.Migrations
                     b.ToTable("categories");
                 });
 
-            modelBuilder.Entity("WebApplication1.Models.Classified", b =>
+            modelBuilder.Entity("MyAds.Models.Classified", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -94,7 +94,7 @@ namespace WebApplication1.Migrations
                     b.ToTable("classifieds");
                 });
 
-            modelBuilder.Entity("WebApplication1.Models.User", b =>
+            modelBuilder.Entity("MyAds.Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -131,15 +131,15 @@ namespace WebApplication1.Migrations
                     b.ToTable("users");
                 });
 
-            modelBuilder.Entity("WebApplication1.Models.Classified", b =>
+            modelBuilder.Entity("MyAds.Models.Classified", b =>
                 {
-                    b.HasOne("WebApplication1.Models.Category", "Category")
+                    b.HasOne("MyAds.Models.Category", "Category")
                         .WithMany("Classifieds")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("WebApplication1.Models.User", "User")
+                    b.HasOne("MyAds.Models.User", "User")
                         .WithMany("Classifieds")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -150,12 +150,12 @@ namespace WebApplication1.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("WebApplication1.Models.Category", b =>
+            modelBuilder.Entity("MyAds.Models.Category", b =>
                 {
                     b.Navigation("Classifieds");
                 });
 
-            modelBuilder.Entity("WebApplication1.Models.User", b =>
+            modelBuilder.Entity("MyAds.Models.User", b =>
                 {
                     b.Navigation("Classifieds");
                 });
