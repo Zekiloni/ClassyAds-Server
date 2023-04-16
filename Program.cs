@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using MyAds.Interfaces;
+using MyAds.Services;
 using System.Text;
 
 
@@ -15,22 +17,25 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("MySqlConnection");
 
 
-
 builder.Services.AddDbContextPool<Database>(options =>
 {
-    options.UseMySQL(connectionString, mysqlOptions =>
+    options.UseMySQL(connectionString!, mysqlOptions =>
     {
         mysqlOptions.EnableRetryOnFailure(1, TimeSpan.FromSeconds(5), null);
     });
 });
 
 
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IClassifiedService, ClassifiedService>();
+
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var key = Encoding.ASCII.GetBytes(configuration["Jwt:Secret"]);
+
+var key = Encoding.ASCII.GetBytes(configuration["Jwt:Secret"]!);
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -47,6 +52,9 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = false
     };
 });
+
+
+
 
 var app = builder.Build();
 

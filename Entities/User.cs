@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MyAds.Enums;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
-using WebApplication1.Enums;
 
-namespace WebApplication1.Models
+namespace MyAds.Entities
 {
     [Table("users")]
     public class User
@@ -40,13 +40,14 @@ namespace WebApplication1.Models
 
         public List<Classified>? Classifieds { get; set; }
 
-        public bool IsAdmin {
-            get { return this.Administrator == UserAdminLevel.Administrator; }
+        public bool IsAdmin
+        {
+            get { return Administrator == UserAdminLevel.Administrator; }
         }
 
-        public bool IsSuperAddmin
+        public bool IsSuperAdmin
         {
-            get { return this.Administrator == UserAdminLevel.SuperAdministrator; }
+            get { return Administrator == UserAdminLevel.SuperAdministrator; }
         }
     }
 }

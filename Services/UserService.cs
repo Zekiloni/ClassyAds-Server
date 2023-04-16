@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WebApplication1.Interfaces;
-using WebApplication1.Models;
+using MyAds.Entities;
+using MyAds.Interfaces;
 
-namespace WebApplication1.Services
+namespace MyAds.Services
 {
     public class UserService : IUserService
     {
@@ -52,7 +52,7 @@ namespace WebApplication1.Services
                 .Include(u => u.Classifieds)
                 .FirstOrDefaultAsync(u => u.Id == userId);
 
-            return (user is not null) ? user.Classifieds : null;
+            return user is not null ? user.Classifieds : null;
         }
     }
 }

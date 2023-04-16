@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WebApplication1.Interfaces;
-using WebApplication1.Models;
+using MyAds.Entities;
+using MyAds.Interfaces;
 
-namespace WebApplication1.Services
+namespace MyAds.Services
 {
     public class ClassifiedService : IClassifiedService
     {

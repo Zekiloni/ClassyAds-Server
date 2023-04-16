@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace WebApplication1.Models
+namespace MyAds.Entities
 {
     [Table("categories")]
     public class Category

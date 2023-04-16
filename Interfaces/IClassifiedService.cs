@@ -1,6 +1,6 @@
-﻿using WebApplication1.Models;
+﻿using MyAds.Entities;
 
-namespace WebApplication1.Interfaces
+namespace MyAds.Interfaces
 {
     public interface IClassifiedService
     {

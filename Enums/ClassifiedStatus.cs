@@ -1,4 +1,4 @@
-﻿namespace WebApplication1.Enums
+﻿namespace MyAds.Enums
 {
     public enum ClassifiedStatus
     {

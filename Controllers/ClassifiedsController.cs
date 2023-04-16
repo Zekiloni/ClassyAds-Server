@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using WebApplication1.Interfaces;
+using MyAds.Interfaces;
 using WebApplication1.Models;
 
-namespace WebApplication1.Controllers
+namespace MyAds.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -55,7 +55,8 @@ namespace WebApplication1.Controllers
             {
                 await _classifieds.CreateClassified(classified);
             }
-            catch (Exception errorCreating) {
+            catch (Exception errorCreating)
+            {
                 return BadRequest(errorCreating);
             }
 

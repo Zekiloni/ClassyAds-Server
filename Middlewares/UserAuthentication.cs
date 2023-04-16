@@ -1,11 +1,8 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
+﻿
+using MyAds.Interfaces;
 using System.Security.Claims;
-using System.Threading.Tasks;
-using WebApplication1.Interfaces;
 
-namespace WebApplication1.Middlewares
+namespace MyAds.Middlewares
 {
     public class UserAuthentication
     {

@@ -2,29 +2,32 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using MyAds.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using WebApplication1.Models;
+using WebApplication1.Services;
 
 [ApiController]
 [Route("[controller]")]
 public class UserController : ControllerBase
 {
-    private readonly IConfiguration configuration;
-    private readonly Database database;
+    private readonly IConfiguration _configuration;
+    private readonly IUserService _userService;
 
-    public UserController(Database dbContext, IConfiguration config)
+    public UserController(IUserService userService, IConfiguration config)
     {
-        configuration = config;
-        database = dbContext;
+        _configuration = config;
+        _userService = userService;
     }
 
-    [HttpGet("/users/{id}")]
-    [Authorize]
-    public async Task<IActionResult> GetUserById(int id)
+    [HttpGet("/users/{userId}")]
+    public async Task<IActionResult> GetUserById(int userId)
     {
-        var user = await database.Users.FindAsync(id);
+        Console.WriteLine("getUserById http");
+
+        var user = await _userService.GetUserById(userId);
         if (user == null)
         {
             return NotFound();
@@ -36,7 +39,7 @@ public class UserController : ControllerBase
     [HttpPost("/users/login")]
     public async Task<IActionResult> LoginUser(string username, string password)
     {
-        var user = await database.Users.FirstOrDefaultAsync(user => user.Username == username);
+        var user = await _userService.GetUserByUsername(username);
 
         if (user == null)
         {
@@ -46,7 +49,7 @@ public class UserController : ControllerBase
         if (BCrypt.Net.BCrypt.Verify(password, user.HashedPassword))
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(configuration["Jwt:Secret"]);
+            var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Secret"]!);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
@@ -62,7 +65,7 @@ public class UserController : ControllerBase
 
             return Ok(new
             {
-                user = user,
+                user,
                 token = tokenHandler.WriteToken(token)
             });
         }
@@ -75,7 +78,7 @@ public class UserController : ControllerBase
     [HttpPost("/users/register")]
     public async Task<IActionResult> RegisterUser(string username, string email, string password, DateTime dateOfBirth)
     {
-        var usernameAlreadyInUse = await database.Users.FirstOrDefaultAsync(user => user.Username == username) == null ? false : true;
+        var usernameAlreadyInUse = await _userService.GetUserByUsername(username) != null;
 
         if (usernameAlreadyInUse)
         {
@@ -90,12 +93,11 @@ public class UserController : ControllerBase
             DateOfBirth = dateOfBirth
         };
 
-        database.Users.Add(user);
-        await database.SaveChangesAsync();
+        await _userService.CreateUser(user);
 
         // Create a JWT token for the newly registered user
         var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(configuration["Jwt:Secret"]);
+        var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Secret"]!);
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(new Claim[]

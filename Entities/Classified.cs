@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MyAds.Enums;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using WebApplication1.Enums;
 
-namespace WebApplication1.Models
+namespace MyAds.Entities
 {
     [Table("classifieds")]
     public class Classified
@@ -28,7 +28,7 @@ namespace WebApplication1.Models
 
         [Required]
         [Column("description")]
-        public string Description { get; set; } 
+        public string Description { get; set; }
 
         [Required]
         [Column("price")]
@@ -51,7 +51,7 @@ namespace WebApplication1.Models
         public int UserId { get; set; }
 
         public User? User { get; set; }
-         
+
         public Category? Category { get; set; }
     }
 }
