@@ -3,6 +3,7 @@ using MyAds.Enums;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
 namespace MyAds.Entities
@@ -37,6 +38,11 @@ namespace MyAds.Entities
         [DefaultValue(0)]
         [Column("administrator")]
         public UserAdminLevel Administrator { get; set; }
+
+        [AllowNull]
+        [DefaultValue(null)]
+        [Column("last_login_at")]
+        public DateTime? LastLoginAt { get; set; }
 
         public List<Classified>? Classifieds { get; set; }
 

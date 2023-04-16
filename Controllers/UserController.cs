@@ -8,6 +8,7 @@ using System.Security.Claims;
 using System.Text;
 using MyAds.Entities;
 using MyAds.Services;
+using MyAds.Middlewares;
 
 [ApiController]
 [Route("[controller]")]
@@ -15,11 +16,14 @@ public class UserController : ControllerBase
 {
     private readonly IConfiguration _configuration;
     private readonly IUserService _userService;
+    private readonly UserAuthentication _userAuthentication;
 
-    public UserController(IUserService userService, IConfiguration config)
+    public UserController(IUserService userService, IConfiguration config, UserAuthentication userAuth)
     {
         _configuration = config;
         _userService = userService;
+        _userAuthentication = userAuth;
+
     }
 
     [HttpGet("/users/{userId}")]
@@ -48,30 +52,20 @@ public class UserController : ControllerBase
 
         if (BCrypt.Net.BCrypt.Verify(password, user.HashedPassword))
         {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Secret"]!);
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.Name, user.Username),
-                    new Claim(ClaimTypes.Email, user.EmailAddress)
-                }),
-                Expires = DateTime.UtcNow.AddHours(1),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
+            user.LastLoginAt = DateTime.Now;
+            await _userService.UpdateUser(user);
 
-            var token = tokenHandler.CreateToken(tokenDescriptor);
+            string token = _userAuthentication.CreateUserToken(user);
 
             return Ok(new
             {
                 user,
-                token = tokenHandler.WriteToken(token)
+                token
             });
         }
         else
         {
-            return Unauthorized();
+            return Unauthorized("Invalid password !");
         }
     }
 
