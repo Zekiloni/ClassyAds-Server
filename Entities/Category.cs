@@ -23,8 +23,8 @@ namespace MyAds.Entities
         [Column("created_at")]
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-        public List<Classified>? Classifieds { get; set; }
-        public virtual Category ParentCategory { get; set; }
-        public virtual List<Category> ChildCategories { get; set; }
+        public List<Order>? Orders { get; set; }
+        public Category? ParentCategory { get; set; }
+        public List<Category> ChildCategories { get; set; }
     }
 }

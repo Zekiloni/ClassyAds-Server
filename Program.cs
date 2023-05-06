@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using MyAds.Interfaces;
 using MyAds.Middlewares;
@@ -18,7 +17,7 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("MySqlConnection");
 
 
-builder.Services.AddDbContextPool<Database>(options =>
+builder.Services.AddDbContextPool<Context>(options =>
 {
     options.UseMySQL(connectionString!, mysqlOptions =>
     {
@@ -28,15 +27,16 @@ builder.Services.AddDbContextPool<Database>(options =>
 
 
 builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IClassifiedService, ClassifiedService>();
-
+builder.Services.AddScoped<IOrderService, OrderService>();
 
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
 var key = Encoding.ASCII.GetBytes(configuration["Jwt:Secret"]!);
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -55,22 +55,32 @@ builder.Services.AddAuthentication(options =>
 });
 
 
-var app = builder.Build();
-
-// pipeline
-if (app.Environment.IsDevelopment())
+try
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-    app.UseDeveloperExceptionPage();
+    var app = builder.Build();
+
+    // pipeline
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+        app.UseDeveloperExceptionPage();
+    }
+
+    app.UseHttpsRedirection();
+
+    app.UseAuthentication();
+    app.UseAuthorization();
+    app.UseMiddleware<UserAuthentication>();
+
+    app.MapControllers();
+
+
+    app.Run();
+}
+catch (Exception e)
+{
+    Console.Write(e);
 }
 
-app.UseHttpsRedirection();
 
-app.UseAuthentication();
-app.UseUserAuthentication();
-app.UseAuthorization();
-app.MapControllers();
-
-
-app.Run();

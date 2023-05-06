@@ -7,7 +7,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace MyAds.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class DrugaTrecaCetvrta : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -22,11 +22,17 @@ namespace MyAds.Migrations
                     id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
+                    parent_category_id = table.Column<int>(type: "int", nullable: true),
                     created_at = table.Column<DateTime>(type: "datetime(6)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_categories", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_categories_categories_parent_category_id",
+                        column: x => x.parent_category_id,
+                        principalTable: "categories",
+                        principalColumn: "id");
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
@@ -37,10 +43,20 @@ namespace MyAds.Migrations
                     id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     username = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
-                    email_address = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
+                    first_name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
+                    last_name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
                     date_of_birth = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    email_address = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
+                    phone = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: true),
+                    street = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true),
+                    city = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true),
+                    province = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true),
+                    postal_code = table.Column<string>(type: "varchar(10)", maxLength: 10, nullable: true),
                     hashed_password = table.Column<string>(type: "longtext", nullable: false),
-                    administrator = table.Column<int>(type: "int", nullable: false)
+                    role = table.Column<int>(type: "int", nullable: false),
+                    last_login_at = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    updated_at = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    created_at = table.Column<DateTime>(type: "datetime(6)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -49,7 +65,7 @@ namespace MyAds.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "classifieds",
+                name: "orders",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "int", nullable: false)
@@ -58,7 +74,7 @@ namespace MyAds.Migrations
                     title = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
                     short_description = table.Column<string>(type: "longtext", nullable: false),
                     description = table.Column<string>(type: "longtext", nullable: false),
-                    price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     status = table.Column<int>(type: "int", nullable: false),
                     created_date = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     updated_date = table.Column<DateTime>(type: "datetime(6)", nullable: true),
@@ -66,15 +82,15 @@ namespace MyAds.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_classifieds", x => x.id);
+                    table.PrimaryKey("PK_orders", x => x.id);
                     table.ForeignKey(
-                        name: "FK_classifieds_categories_CategoryId",
+                        name: "FK_orders_categories_CategoryId",
                         column: x => x.CategoryId,
                         principalTable: "categories",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_classifieds_users_UserId",
+                        name: "FK_orders_users_UserId",
                         column: x => x.UserId,
                         principalTable: "users",
                         principalColumn: "id",
@@ -83,13 +99,18 @@ namespace MyAds.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateIndex(
-                name: "IX_classifieds_CategoryId",
-                table: "classifieds",
+                name: "IX_categories_parent_category_id",
+                table: "categories",
+                column: "parent_category_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_orders_CategoryId",
+                table: "orders",
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_classifieds_UserId",
-                table: "classifieds",
+                name: "IX_orders_UserId",
+                table: "orders",
                 column: "UserId");
         }
 
@@ -97,7 +118,7 @@ namespace MyAds.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "classifieds");
+                name: "orders");
 
             migrationBuilder.DropTable(
                 name: "categories");

@@ -2,23 +2,26 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
 namespace MyAds.Migrations
 {
-    [DbContext(typeof(Database))]
-    partial class DatabaseModelSnapshot : ModelSnapshot
+    [DbContext(typeof(Context))]
+    [Migration("20230506223139_DrugaTrecaCetvrta")]
+    partial class DrugaTrecaCetvrta
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "7.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("MyAds.Models.Category", b =>
+            modelBuilder.Entity("MyAds.Entities.Category", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -35,17 +38,27 @@ namespace MyAds.Migrations
                         .HasColumnType("varchar(50)")
                         .HasColumnName("name");
 
+                    b.Property<int?>("ParentCategoryId")
+                        .HasColumnType("int")
+                        .HasColumnName("parent_category_id");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ParentCategoryId");
 
                     b.ToTable("categories");
                 });
 
-            modelBuilder.Entity("MyAds.Models.Classified", b =>
+            modelBuilder.Entity("MyAds.Entities.Order", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("id");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("amount");
 
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
@@ -58,10 +71,6 @@ namespace MyAds.Migrations
                         .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("description");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)")
-                        .HasColumnName("price");
 
                     b.Property<string>("ShortDescription")
                         .IsRequired()
@@ -91,19 +100,24 @@ namespace MyAds.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("classifieds");
+                    b.ToTable("orders");
                 });
 
-            modelBuilder.Entity("MyAds.Models.User", b =>
+            modelBuilder.Entity("MyAds.Entities.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("id");
 
-                    b.Property<int>("Administrator")
-                        .HasColumnType("int")
-                        .HasColumnName("administrator");
+                    b.Property<string>("City")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("city");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("created_at");
 
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime(6)")
@@ -115,10 +129,54 @@ namespace MyAds.Migrations
                         .HasColumnType("varchar(50)")
                         .HasColumnName("email_address");
 
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("first_name");
+
                     b.Property<string>("HashedPassword")
                         .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("hashed_password");
+
+                    b.Property<DateTime?>("LastLoginAt")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("last_login_at");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("last_name");
+
+                    b.Property<string>("Phone")
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)")
+                        .HasColumnName("phone");
+
+                    b.Property<string>("PostalCode")
+                        .HasMaxLength(10)
+                        .HasColumnType("varchar(10)")
+                        .HasColumnName("postal_code");
+
+                    b.Property<string>("Province")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("province");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("int")
+                        .HasColumnName("role");
+
+                    b.Property<string>("Street")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("street");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("updated_at");
 
                     b.Property<string>("Username")
                         .IsRequired()
@@ -131,16 +189,25 @@ namespace MyAds.Migrations
                     b.ToTable("users");
                 });
 
-            modelBuilder.Entity("MyAds.Models.Classified", b =>
+            modelBuilder.Entity("MyAds.Entities.Category", b =>
                 {
-                    b.HasOne("MyAds.Models.Category", "Category")
-                        .WithMany("Classifieds")
+                    b.HasOne("MyAds.Entities.Category", "ParentCategory")
+                        .WithMany("ChildCategories")
+                        .HasForeignKey("ParentCategoryId");
+
+                    b.Navigation("ParentCategory");
+                });
+
+            modelBuilder.Entity("MyAds.Entities.Order", b =>
+                {
+                    b.HasOne("MyAds.Entities.Category", "Category")
+                        .WithMany("Orders")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MyAds.Models.User", "User")
-                        .WithMany("Classifieds")
+                    b.HasOne("MyAds.Entities.User", "User")
+                        .WithMany("Orders")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -150,14 +217,16 @@ namespace MyAds.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("MyAds.Models.Category", b =>
+            modelBuilder.Entity("MyAds.Entities.Category", b =>
                 {
-                    b.Navigation("Classifieds");
+                    b.Navigation("ChildCategories");
+
+                    b.Navigation("Orders");
                 });
 
-            modelBuilder.Entity("MyAds.Models.User", b =>
+            modelBuilder.Entity("MyAds.Entities.User", b =>
                 {
-                    b.Navigation("Classifieds");
+                    b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618
         }

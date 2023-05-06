@@ -1,116 +1,136 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.AspNetCore.Mvc;
 using MyAds.Interfaces;
+using MyAds.Entities;
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using MyAds.Entities;
-using MyAds.Services;
-using MyAds.Middlewares;
+using MyAds.Models;
 
-[ApiController]
-[Route("[controller]")]
-public class UserController : ControllerBase
+
+namespace MyAds.Controllers
 {
-    private readonly IConfiguration _configuration;
-    private readonly IUserService _userService;
-    private readonly UserAuthentication _userAuthentication;
-
-    public UserController(IUserService userService, IConfiguration config, UserAuthentication userAuth)
+    [ApiController]
+    [Route("[controller]")]
+    public class UserController : ControllerBase
     {
-        _configuration = config;
-        _userService = userService;
-        _userAuthentication = userAuth;
+        private readonly IConfiguration _configuration;
+        private readonly IUserService _users;
 
-    }
 
-    [HttpGet("/users/{userId}")]
-    public async Task<IActionResult> GetUserById(int userId)
-    {
-        Console.WriteLine("getUserById http");
-
-        var user = await _userService.GetUserById(userId);
-        if (user == null)
+        public UserController(IUserService userService, IConfiguration config)
         {
-            return NotFound();
+            _configuration = config;
+            _users = userService;
         }
 
-        return Ok(user);
-    }
 
-    [HttpPost("/users/login")]
-    public async Task<IActionResult> LoginUser(string username, string password)
-    {
-        var user = await _userService.GetUserByUsername(username);
-
-        if (user == null)
+        private string CreateUserToken(User user)
         {
-            return NotFound();
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var secretKey = _configuration.GetValue<string>("Jwt:Secret");
+
+            if (secretKey == null)
+            {
+                throw new Exception("secretKey is null");
+            }
+
+            var key = Encoding.ASCII.GetBytes(secretKey);
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                    new Claim(ClaimTypes.Name, user.Username),
+                }),
+                Expires = DateTime.UtcNow.AddDays(7),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
         }
 
-        if (BCrypt.Net.BCrypt.Verify(password, user.HashedPassword))
-        {
-            user.LastLoginAt = DateTime.Now;
-            await _userService.UpdateUser(user);
 
-            string token = _userAuthentication.CreateUserToken(user);
+        [HttpGet("/users/{userId}")]
+        public async Task<IActionResult> GetUserById(int userId)
+        {
+            var user = await _users.GetUserById(userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(user);
+        }
+
+
+        [HttpPost("/users/login")]
+        public async Task<IActionResult> LoginUser(LoginUserViewModel loginUser)
+        {
+            var user = await _users.GetUserByUsername(loginUser.Username);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            if (BCrypt.Net.BCrypt.Verify(loginUser.Password, user.HashedPassword))
+            {
+                user.LastLoginAt = DateTime.Now;
+                await _users.UpdateUser(user);
+
+                try
+                {
+                    var token = CreateUserToken(user);
+                    return Ok(new
+                    {
+                        user,
+                        token
+                    });
+                }
+                catch (Exception error)
+                {
+                    Console.Write(error);
+                    return BadRequest();
+                }
+            }
+            else
+            {
+                return Unauthorized("Invalid password !");
+            }
+        }
+
+
+        [HttpPost("/users/register")]
+        public async Task<IActionResult> RegisterUser(RegisterUserViewModel newUser)
+        {
+            var usernameAlreadyInUse = await _users.GetUserByUsername(newUser.Username) != null;
+
+            Console.Write(newUser);
+
+            if (usernameAlreadyInUse)
+            {
+                return BadRequest("Username already in use.");
+            }
+
+            var user = new User
+            {
+                Username = newUser.Username,
+                EmailAddress = newUser.EmailAddress,
+                FirstName = newUser.FirstName,
+                LastName = newUser.LastName,
+                HashedPassword = BCrypt.Net.BCrypt.HashPassword(newUser.Password),
+                DateOfBirth = newUser.DateOfBirth
+            };
+
+            await _users.CreateUser(user);
 
             return Ok(new
             {
-                user,
-                token
+                user
             });
         }
-        else
-        {
-            return Unauthorized("Invalid password !");
-        }
-    }
-
-    [HttpPost("/users/register")]
-    public async Task<IActionResult> RegisterUser(string username, string email, string password, DateTime dateOfBirth)
-    {
-        var usernameAlreadyInUse = await _userService.GetUserByUsername(username) != null;
-
-        if (usernameAlreadyInUse)
-        {
-            return BadRequest("Username already in use.");
-        }
-
-        var user = new User
-        {
-            Username = username,
-            EmailAddress = email,
-            HashedPassword = BCrypt.Net.BCrypt.HashPassword(password),
-            DateOfBirth = dateOfBirth
-        };
-
-        await _userService.CreateUser(user);
-
-        // Create a JWT token for the newly registered user
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Secret"]!);
-        var tokenDescriptor = new SecurityTokenDescriptor
-        {
-            Subject = new ClaimsIdentity(new Claim[]
-            {
-                new Claim(ClaimTypes.Name, user.Username),
-                new Claim(ClaimTypes.Email, user.EmailAddress)
-            }),
-            Expires = DateTime.UtcNow.AddHours(1),
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-        };
-
-        var token = tokenHandler.CreateToken(tokenDescriptor);
-
-        // return a 201 Created response with the newly created user object and the JWT token
-        return CreatedAtAction(nameof(GetUserById), new
-        {
-            id = user.Id,
-            user = user,
-            token = tokenHandler.WriteToken(token)
-        });
     }
 }

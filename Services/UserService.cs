@@ -6,8 +6,8 @@ namespace MyAds.Services
 {
     public class UserService : IUserService
     {
-        private readonly Database _database;
-        public UserService(Database dbContext)
+        private readonly Context _database;
+        public UserService(Context dbContext)
         {
             _database = dbContext;
         }
@@ -45,13 +45,13 @@ namespace MyAds.Services
             return await _database.Users.ToListAsync();
         }
 
-        public async Task<IEnumerable<Classified>?> GetUserClassifieds(int userId)
+        public async Task<IEnumerable<Order>?> GetUserOrders(int userId)
         {
             var user = await _database.Users
-                .Include(u => u.Classifieds)
+                .Include(u => u.Orders)
                 .FirstOrDefaultAsync(u => u.Id == userId);
 
-            return user is not null ? user.Classifieds : null;
+            return user is not null ? user.Orders : null;
         }
     }
 }

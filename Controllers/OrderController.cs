@@ -7,37 +7,35 @@ namespace MyAds.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ClassifiedsController : ControllerBase
+    public class OrderController : ControllerBase
     {
         private readonly IConfiguration _configuration;
-        private readonly IClassifiedService _classifieds;
+        private readonly IOrderService _orders;
 
-        public ClassifiedsController(IClassifiedService classifieds, IConfiguration config)
+        public OrderController(IOrderService orders, IConfiguration config)
         {
             _configuration = config;
-            _classifieds = classifieds;
+            _orders = orders;
         }
 
-        [HttpGet("/classifieds/{classifiedId}")]
-        [Authorize]
-        public async Task<IActionResult> GetClassifiedById(int classifiedId)
+        [HttpGet("/orders/{orderId}")]
+        public async Task<IActionResult> GetClassifiedById(int orderId)
         {
-            var classified = await _classifieds.GetClassifiedById(classifiedId);
+            var order = await _orders.GetOrderById(orderId);
 
-            if (classified == null)
+            if (order == null)
             {
                 return NotFound();
             }
 
-            return Ok(classified);
+            return Ok(order);
         }
 
-        [HttpPost("/classifieds/create")]
-        [Authorize]
-        public async Task<IActionResult> CreateClassified(int categoryId, string title, string shortDescription, string description)
+        [HttpPost("/orders/create")]
+        public async Task<IActionResult> CreateOrder(int categoryId, string title, string shortDescription, string description, int amount)
         {
 
-            var classified = new Classified
+            var classified = new Order
             {
                 CategoryId = categoryId,
                 Title = title,
@@ -53,7 +51,7 @@ namespace MyAds.Controllers
 
             try
             {
-                await _classifieds.CreateClassified(classified);
+                await _orders.CreateOrder(classified);
             }
             catch (Exception errorCreating)
             {

@@ -1,11 +1,10 @@
 ﻿
 using Microsoft.IdentityModel.Tokens;
-using MyAds.Entities;
-using MyAds.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-
+using MyAds.Interfaces;
+using MyAds.Entities;
 
 namespace MyAds.Middlewares
 {
@@ -13,13 +12,12 @@ namespace MyAds.Middlewares
     {
         private readonly RequestDelegate _next;
         private readonly IConfiguration _configuration;
-        private readonly IUserService _userService;
+        private readonly IServiceProvider _serviceProvider;
 
-
-        public UserAuthentication(RequestDelegate next, IUserService userService, IConfiguration config)
+        public UserAuthentication(RequestDelegate next, IConfiguration config, IServiceProvider serviceProvider)
         {
             _next = next;
-            _userService = userService;
+            _serviceProvider = serviceProvider;
             _configuration = config;
         }
 
@@ -52,11 +50,16 @@ namespace MyAds.Middlewares
                     {
                         var userId = userIdClaim.Value;
 
-                        var user = _userService.GetUserById(int.Parse(userId));
+                        var _users = _serviceProvider.GetService(typeof(IUserService)) as IUserService;
 
-                        if (user != null)
+                        if (_users != null)
                         {
-                            context.Items["User"] = user;
+                            var user = _users.GetUserById(int.Parse(userId));
+
+                            if (user != null)
+                            {
+                                context.Items["User"] = user;
+                            }
                         }
                     }
                 }
@@ -80,36 +83,6 @@ namespace MyAds.Middlewares
             {
                 return null;
             }
-        }
-
-        public string CreateUserToken(User user)
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var secretKey = _configuration.GetValue<string>("Jwt:Key");
-            var key = Encoding.ASCII.GetBytes(secretKey!);
-
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                    new Claim(ClaimTypes.Name, user.Username),
-                }),
-                Expires = DateTime.UtcNow.AddDays(7),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
-        }
-    }
-
-
-    public static class UserAuthenticationExtensions
-    {
-        public static IApplicationBuilder UseUserAuthentication(this IApplicationBuilder builder)
-        {
-            return builder.UseMiddleware<UserAuthentication>();
         }
     }
 }

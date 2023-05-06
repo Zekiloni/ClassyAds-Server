@@ -6,8 +6,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyAds.Entities
 {
-    [Table("classifieds")]
-    public class Classified
+    [Table("orders")]
+    public class Order
     {
         [Key]
         [Column("id")]
@@ -31,13 +31,15 @@ namespace MyAds.Entities
         public string Description { get; set; }
 
         [Required]
-        [Column("price")]
+        [Column("amount")]
         [DataType(DataType.Currency)]
-        public decimal Price { get; set; }
+        public decimal Amount { get; set; }
+
 
         [Required]
+        [DefaultValue(OrderStatus.Draft)]
         [Column("status")]
-        public ClassifiedStatus Status { get; set; }
+        public OrderStatus Status { get; set; }
 
         [Required]
         [Column("created_date")]
@@ -53,24 +55,5 @@ namespace MyAds.Entities
         public User? User { get; set; }
 
         public Category? Category { get; set; }
-    }
-
-    [Table("classified_photos")]
-    public class Photo
-    {
-        [Key]
-        [Column("id")]
-        public int Id { get; set; }
-
-        [Required]
-        [Column("url")]
-        public string Url { get; set; }
-
-        [ForeignKey("ClassifiedId")]
-        public Classified Classified { get; set; }
-
-        [Required]
-        [Column("classified_id")]
-        public int ClassifiedId { get; set; }
     }
 }
