@@ -7,10 +7,12 @@ namespace MyAds.Services
     public class OrderService : IOrderService
     {
         private readonly Context _database;
+
         public OrderService(Context database)
         {
             _database = database;
         }
+
         public async Task<IEnumerable<Order>> GetAllOrders()
         {
             return await _database.Orders.ToListAsync();
@@ -33,9 +35,11 @@ namespace MyAds.Services
             await _database.SaveChangesAsync();
         }
 
-        public Task UpdateOrder(Order classified)
+        public async Task UpdateOrder(Order order)
         {
-            throw new NotImplementedException();
+            order.UpdatedAt = DateTime.Now;
+            _database.Entry(order).State = EntityState.Modified;
+            await _database.SaveChangesAsync();
         }
     }
 }

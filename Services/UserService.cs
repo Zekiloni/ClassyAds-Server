@@ -30,6 +30,7 @@ namespace MyAds.Services
 
         public async Task UpdateUser(User user)
         {
+            user.UpdatedAt = DateTime.Now;
             _database.Entry(user).State = EntityState.Modified;
             await _database.SaveChangesAsync();
         }

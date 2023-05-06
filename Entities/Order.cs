@@ -43,10 +43,10 @@ namespace MyAds.Entities
 
         [Required]
         [Column("created_date")]
-        public DateTime CreatedDate { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         [Column("updated_date")]
-        public DateTime? UpdatedDate { get; set; }
+        public DateTime? UpdatedAt { get; set; }
 
         [Required]
         [ForeignKey("user_id")]
