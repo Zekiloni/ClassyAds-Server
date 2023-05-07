@@ -3,8 +3,9 @@
     public enum OrderStatus
     {
         Draft,
-        Active,
-        Expired,
-        Archived
+        Processing,
+        PreApproved,
+        Approved,
+        Declined
     }
 }

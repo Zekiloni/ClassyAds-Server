@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Text;
 using MyAds.Interfaces;
 using MyAds.Entities;
+using System.Net;
 
 namespace MyAds.Middlewares
 {
@@ -28,12 +29,12 @@ namespace MyAds.Middlewares
 
             if (!string.IsNullOrEmpty(token))
             {
-                var tokenHandler = new JwtSecurityTokenHandler();
                 var secretKey = _configuration.GetValue<string>("Jwt:Secret");
                 var key = Encoding.ASCII.GetBytes(secretKey!);
 
                 try
                 {
+                    var tokenHandler = new JwtSecurityTokenHandler();
                     var tokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuerSigningKey = true,
@@ -46,18 +47,24 @@ namespace MyAds.Middlewares
                     var claimsPrincipal = tokenHandler.ValidateToken(token, tokenValidationParameters, out var validatedToken);
                     var userIdClaim = claimsPrincipal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
 
+                    Console.WriteLine("middleware before userIdClaim != null, userIdClaim " + userIdClaim);
+
                     if (userIdClaim != null)
                     {
+
                         var userId = userIdClaim.Value;
+                        Console.WriteLine("middleware userId " + userId);
 
                         var _users = _serviceProvider.GetService(typeof(IUserService)) as IUserService;
+                        Console.WriteLine("middleware after _users");
 
                         if (_users != null)
                         {
-                            var user = _users.GetUserById(int.Parse(userId));
-
+                            var user = await _users.GetUserById(int.Parse(userId));
+                            Console.WriteLine("middleware user checking");
                             if (user != null)
                             {
+                                Console.WriteLine("middleware user is not null");
                                 context.Items["User"] = user;
                             }
                         }
@@ -65,7 +72,8 @@ namespace MyAds.Middlewares
                 }
                 catch (Exception)
                 {
-                    // Token validation failed
+                    // token validation failed
+                    context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                 }
             }
 

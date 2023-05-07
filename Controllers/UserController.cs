@@ -6,7 +6,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using MyAds.Models;
-
+using Microsoft.AspNetCore.Authorization;
 
 namespace MyAds.Controllers
 {
@@ -17,13 +17,11 @@ namespace MyAds.Controllers
         private readonly IConfiguration _configuration;
         private readonly IUserService _users;
 
-
         public UserController(IUserService userService, IConfiguration config)
         {
             _configuration = config;
             _users = userService;
         }
-
 
         private string CreateUserToken(User user)
         {
@@ -44,7 +42,7 @@ namespace MyAds.Controllers
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                     new Claim(ClaimTypes.Name, user.Username),
                 }),
-                Expires = DateTime.UtcNow.AddDays(7),
+                Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
@@ -52,10 +50,20 @@ namespace MyAds.Controllers
             return tokenHandler.WriteToken(token);
         }
 
-
         [HttpGet("/users/{userId}")]
+        [Authorize]
         public async Task<IActionResult> GetUserById(int userId)
         {
+            var logUser = HttpContext.Items["User"] as User;
+
+            if (logUser == null)
+            {
+                Console.WriteLine("logUser is null");
+            } else
+            {
+                Console.WriteLine("logUser is something");
+            }
+
             var user = await _users.GetUserById(userId);
             if (user == null)
             {
@@ -64,7 +72,6 @@ namespace MyAds.Controllers
 
             return Ok(user);
         }
-
 
         [HttpPost("/users/login")]
         public async Task<IActionResult> LoginUser(LoginUserViewModel loginUser)
@@ -101,7 +108,6 @@ namespace MyAds.Controllers
                 return Unauthorized("Invalid password !");
             }
         }
-
 
         [HttpPost("/users/register")]
         public async Task<IActionResult> RegisterUser(RegisterUserViewModel newUser)

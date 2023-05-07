@@ -19,8 +19,10 @@ namespace MyAds.Controllers
         }
 
         [HttpGet("/orders/{orderId}")]
-        public async Task<IActionResult> GetClassifiedById(int orderId)
+        [Authorize]
+        public async Task<IActionResult> GetOrderByOd(int orderId)
         {
+
             var order = await _orders.GetOrderById(orderId);
 
             if (order == null)
