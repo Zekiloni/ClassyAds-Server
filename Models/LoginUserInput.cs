@@ -2,7 +2,7 @@
 
 namespace MyAds.Models
 {
-    public class LoginUserViewModel
+    public class LoginUserInput
     {
         [Required(ErrorMessage = "Username is required !")]
         public string Username { get; set; }

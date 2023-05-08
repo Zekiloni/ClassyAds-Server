@@ -2,7 +2,7 @@
 
 namespace MyAds.Models
 {
-    public class UserViewModel
+    public class UserPublicViewOutput
     {
         public int Id { get; set; }
 

@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace MyAds.Entities
 {
     [Table("orders")]
-    public class Order
+    public class Classified
     {
         [Key]
         [Column("id")]

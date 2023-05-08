@@ -13,12 +13,10 @@ namespace MyAds.Middlewares
     {
         private readonly RequestDelegate _next;
         private readonly IConfiguration _configuration;
-        private readonly IServiceProvider _serviceProvider;
 
-        public UserAuthentication(RequestDelegate next, IConfiguration config, IServiceProvider serviceProvider)
+        public UserAuthentication(RequestDelegate next, IConfiguration config)
         {
             _next = next;
-            _serviceProvider = serviceProvider;
             _configuration = config;
         }
 
@@ -47,32 +45,14 @@ namespace MyAds.Middlewares
                     var claimsPrincipal = tokenHandler.ValidateToken(token, tokenValidationParameters, out var validatedToken);
                     var userIdClaim = claimsPrincipal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
 
-                    Console.WriteLine("middleware before userIdClaim != null, userIdClaim " + userIdClaim);
-
                     if (userIdClaim != null)
                     {
-
                         var userId = userIdClaim.Value;
-                        Console.WriteLine("middleware userId " + userId);
-
-                        var _users = _serviceProvider.GetService(typeof(IUserService)) as IUserService;
-                        Console.WriteLine("middleware after _users");
-
-                        if (_users != null)
-                        {
-                            var user = await _users.GetUserById(int.Parse(userId));
-                            Console.WriteLine("middleware user checking");
-                            if (user != null)
-                            {
-                                Console.WriteLine("middleware user is not null");
-                                context.Items["User"] = user;
-                            }
-                        }
+                        context.Items["UserId"] = int.Parse(userId);
                     }
                 }
                 catch (Exception)
                 {
-                    // token validation failed
                     context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                 }
             }

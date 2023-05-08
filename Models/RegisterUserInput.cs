@@ -2,7 +2,7 @@
 
 namespace MyAds.Models
 {
-    public class RegisterUserViewModel
+    public class RegisterUserInput
     {
 
         [Required(ErrorMessage = "Username is required.")]

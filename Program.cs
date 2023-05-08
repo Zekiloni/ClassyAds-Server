@@ -27,7 +27,7 @@ builder.Services.AddDbContextPool<Context>(options =>
 
 
 builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IClassifiedService, ClassifiedService>();
 
 builder.Services.AddControllers();
 

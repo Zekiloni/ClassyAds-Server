@@ -74,7 +74,7 @@ namespace MyAds.Controllers
         }
 
         [HttpPost("/users/login")]
-        public async Task<IActionResult> LoginUser(LoginUserViewModel loginUser)
+        public async Task<IActionResult> LoginUser(LoginUserInput loginUser)
         {
             var user = await _users.GetUserByUsername(loginUser.Username);
 
@@ -110,7 +110,7 @@ namespace MyAds.Controllers
         }
 
         [HttpPost("/users/register")]
-        public async Task<IActionResult> RegisterUser(RegisterUserViewModel newUser)
+        public async Task<IActionResult> RegisterUser(RegisterUserInput newUser)
         {
             var usernameAlreadyInUse = await _users.GetUserByUsername(newUser.Username) != null;
 

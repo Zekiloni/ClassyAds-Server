@@ -87,7 +87,7 @@ namespace MyAds.Entities
         [Column("created_at")]
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-        public List<Order>? Orders { get; set; }
+        public List<Classified>? Orders { get; set; }
 
         public bool IsAdmin
         {

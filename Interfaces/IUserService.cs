@@ -10,6 +10,6 @@ namespace MyAds.Interfaces
         Task CreateUser(User user);
         Task UpdateUser(User user);
         Task DeleteUser(User user);
-        Task<IEnumerable<Order>?> GetUserOrders(int userId);
+        Task<IEnumerable<Classified>?> GetUserOrders(int userId);
     }
 }

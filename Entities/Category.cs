@@ -22,7 +22,7 @@ namespace MyAds.Entities
         [Column("created_at")]
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-        public List<Order>? Orders { get; set; }
+        public List<Classified>? Classifieds { get; set; }
         public Category? ParentCategory { get; set; }
         public List<Category> ChildCategories { get; set; }
     }
