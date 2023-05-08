@@ -10,6 +10,8 @@ public class Context : DbContext
     public DbSet<Category> Categories { get; set; }
     public DbSet<Classified> Orders { get; set; }
 
+    public DbSet<ClassifiedMediaFile> MediaFiles { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Classified>()
@@ -19,7 +21,7 @@ public class Context : DbContext
 
         modelBuilder.Entity<Classified>()
             .HasOne(c => c.Category)
-            .WithMany(c => c.Orders)
+            .WithMany(c => c.Classifieds)
             .HasForeignKey(c => c.CategoryId);
     }
 };

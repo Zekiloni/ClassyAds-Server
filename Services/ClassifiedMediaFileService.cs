@@ -1,13 +1,26 @@
 ﻿using MyAds.Entities;
 using MyAds.Interfaces;
+using Microsoft.AspNetCore.Hosting;
+using System;
+using Microsoft.EntityFrameworkCore;
 
 namespace MyAds.Services
 {
     public class ClassifiedMediaFileService : IClassifiedMediaService
     {
-        public Task<ClassifiedMediaFile> CreateMedieFile(ClassifiedMediaFile mediaFile)
+        private readonly Context _database;
+        private readonly IWebHostEnvironment _env;
+
+        public ClassifiedMediaFileService(Context database, IWebHostEnvironment environment)
         {
-            throw new NotImplementedException();
+            _database = database;
+            _env = environment;
+        }
+
+        public async Task CreateMediaFile(ClassifiedMediaFile mediaFile)
+        {
+            await _database.MediaFiles.AddAsync(mediaFile);
+            await _database.SaveChangesAsync();
         }
 
         public Task DeleteMediaFile(int mediaFileId)
@@ -15,9 +28,9 @@ namespace MyAds.Services
             throw new NotImplementedException();
         }
 
-        public Task<ClassifiedMediaFile> GetdMediaFileById(int categoryId)
+        public async Task<ClassifiedMediaFile?> GetMediaFileById(int mediaFileId)
         {
-            throw new NotImplementedException();
+            return await _database.MediaFiles.FirstOrDefaultAsync(m => m.Id == mediaFileId);
         }
 
         public Task<IEnumerable<ClassifiedMediaFile>> GetMediaFiles()
@@ -25,18 +38,18 @@ namespace MyAds.Services
             throw new NotImplementedException();
         }
 
-        public Task<ClassifiedMediaFile> UpdateMediaFile(int mediaFileId, ClassifiedMediaFile mediaFile)
+        public async Task UpdateMediaFile(ClassifiedMediaFile mediaFile)
         {
-            throw new NotImplementedException();
+            mediaFile.UpdatedAt = DateTime.Now;
+            _database.Entry(mediaFile).State = EntityState.Modified;
+            await _database.SaveChangesAsync();
         }
 
-        public async Task<string> SaveFileAsync(string classifiedTittle, IFormFile file)
+        public async Task<string> UploadMediaFile(IFormFile file)
         {
-            var fileName = Path.GetFileNameWithoutExtension(file.FileName);
             var fileExtension = Path.GetExtension(file.FileName);
             var uniqueId = Guid.NewGuid().ToString("N").Substring(0, 8);
-            var sanitizedTitle = classifiedTittle.Replace(' ', '_').Replace('-', '_');
-            var newFileName = $"{sanitizedTitle}-{uniqueId}{fileExtension}";
+            var newFileName = $"{uniqueId}{fileExtension}";
             var filePath = Path.Combine(_env.ContentRootPath, "uploads/classifieds", newFileName);
 
             using (var stream = new FileStream(filePath, FileMode.Create))
