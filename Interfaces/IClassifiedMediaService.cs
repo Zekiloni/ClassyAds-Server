@@ -5,10 +5,10 @@ namespace MyAds.Interfaces
     public interface IClassifiedMediaService
     {
         Task<IEnumerable<ClassifiedMediaFile>> GetMediaFiles();
-        Task<ClassifiedMediaFile> GetCategoryById(int categoryId);
+        Task<ClassifiedMediaFile> GetdMediaFileById(int classifiedId);
         Task<ClassifiedMediaFile> CreateMedieFile(ClassifiedMediaFile mediaFile);
         Task<ClassifiedMediaFile> UpdateMediaFile(int mediaFileId, ClassifiedMediaFile medieFile);
         Task DeleteMediaFile(int mediaFileId);
-        Task<string> SaveFileAsync(ClassifiedMediaFile mediaFile);
+        Task<string> SaveFileAsync(string classifiedTittle, IFormFile file);
     }
 }
