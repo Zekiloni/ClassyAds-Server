@@ -8,10 +8,10 @@ namespace MyAds.Services
 {
     public class ClassifiedMediaFileService : IClassifiedMediaService
     {
-        private readonly Context _database;
+        private readonly DatabaseContext _database;
         private readonly IWebHostEnvironment _env;
 
-        public ClassifiedMediaFileService(Context database, IWebHostEnvironment environment)
+        public ClassifiedMediaFileService(DatabaseContext database, IWebHostEnvironment environment)
         {
             _database = database;
             _env = environment;
@@ -23,9 +23,10 @@ namespace MyAds.Services
             await _database.SaveChangesAsync();
         }
 
-        public Task DeleteMediaFile(int mediaFileId)
+        public async Task DeleteMediaFile(ClassifiedMediaFile mediaFile)
         {
-            throw new NotImplementedException();
+            _database.MediaFiles.Remove(mediaFile);
+            await _database.SaveChangesAsync();
         }
 
         public async Task<ClassifiedMediaFile?> GetMediaFileById(int mediaFileId)

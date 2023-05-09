@@ -2,13 +2,13 @@
 using MyAds.Entities;
 
 
-public class Context : DbContext
+public class DatabaseContext : DbContext
 {
-    public Context(DbContextOptions<Context> options) : base(options) { }
+    public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) { }
 
     public DbSet<User> Users { get; set; }
     public DbSet<Category> Categories { get; set; }
-    public DbSet<Classified> Orders { get; set; }
+    public DbSet<Classified> Classifieds { get; set; }
 
     public DbSet<ClassifiedMediaFile> MediaFiles { get; set; }
 

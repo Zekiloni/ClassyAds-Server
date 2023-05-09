@@ -6,6 +6,7 @@ namespace MyAds.Interfaces
     {
         Task<Classified?> GetClassifiedById(int classifiedId);
         Task<IEnumerable<Classified>> GetAllClassifieds();
+        Task<IEnumerable<Classified>> GetClassifiedsByFilter(string filter, int? categoryId);
         Task CreateClassified(Classified classified);
         Task UpdateClassified(Classified classified);
         Task DeleteClassified(Classified classified);

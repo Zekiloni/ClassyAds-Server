@@ -2,16 +2,19 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
 namespace MyAds.Migrations
 {
-    [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(DatabaseContext))]
+    [Migration("20230509164524_NiceBro")]
+    partial class NiceBro
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,8 +39,7 @@ namespace MyAds.Migrations
                         .HasColumnName("name");
 
                     b.Property<int?>("ParentCategoryId")
-                        .HasColumnType("int")
-                        .HasColumnName("parent_category_id");
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -46,7 +48,7 @@ namespace MyAds.Migrations
                     b.ToTable("categories");
                 });
 
-            modelBuilder.Entity("MyAds.Entities.Order", b =>
+            modelBuilder.Entity("MyAds.Entities.Classified", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -60,7 +62,7 @@ namespace MyAds.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("created_date");
 
@@ -84,7 +86,7 @@ namespace MyAds.Migrations
                         .HasColumnType("varchar(50)")
                         .HasColumnName("title");
 
-                    b.Property<DateTime?>("UpdatedDate")
+                    b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("updated_date");
 
@@ -97,7 +99,35 @@ namespace MyAds.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("orders");
+                    b.ToTable("classifieds");
+                });
+
+            modelBuilder.Entity("MyAds.Entities.ClassifiedMediaFile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    b.Property<int>("ClassifiedId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("created_at");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("updated_at");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("url");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("classified_media_files");
                 });
 
             modelBuilder.Entity("MyAds.Entities.User", b =>
@@ -195,10 +225,10 @@ namespace MyAds.Migrations
                     b.Navigation("ParentCategory");
                 });
 
-            modelBuilder.Entity("MyAds.Entities.Order", b =>
+            modelBuilder.Entity("MyAds.Entities.Classified", b =>
                 {
                     b.HasOne("MyAds.Entities.Category", "Category")
-                        .WithMany("Orders")
+                        .WithMany("Classifieds")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -218,7 +248,7 @@ namespace MyAds.Migrations
                 {
                     b.Navigation("ChildCategories");
 
-                    b.Navigation("Orders");
+                    b.Navigation("Classifieds");
                 });
 
             modelBuilder.Entity("MyAds.Entities.User", b =>

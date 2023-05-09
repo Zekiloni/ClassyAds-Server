@@ -1,12 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MyAds.Enums;
+﻿using MyAds.Enums;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyAds.Entities
 {
-    [Table("orders")]
+    [Table("classifieds")]
     public class Classified
     {
         [Key]

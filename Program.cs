@@ -17,7 +17,7 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("MySqlConnection");
 
 
-builder.Services.AddDbContextPool<Context>(options =>
+builder.Services.AddDbContextPool<DatabaseContext>(options =>
 {
     options.UseMySQL(connectionString!, mysqlOptions =>
     {
@@ -26,9 +26,14 @@ builder.Services.AddDbContextPool<Context>(options =>
 });
 
 
+// Application services
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IClassifiedService, ClassifiedService>();
+builder.Services.AddScoped<IClassifiedMediaService, ClassifiedMediaFileService>();
 
+
+// Adding controllers
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();

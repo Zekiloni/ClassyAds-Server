@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel;
 
 namespace MyAds.Entities
 {
@@ -15,6 +16,7 @@ namespace MyAds.Entities
         [MaxLength(50)]
         public string Name { get; set; }
 
+        [DefaultValue(null)]
         [ForeignKey("parent_category_id")]
         public int? ParentCategoryId { get; set; }
 

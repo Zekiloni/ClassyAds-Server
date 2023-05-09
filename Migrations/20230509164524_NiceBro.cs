@@ -7,7 +7,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace MyAds.Migrations
 {
     /// <inheritdoc />
-    public partial class DrugaTrecaCetvrta : Migration
+    public partial class NiceBro : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -22,17 +22,34 @@ namespace MyAds.Migrations
                     id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
-                    parent_category_id = table.Column<int>(type: "int", nullable: true),
+                    ParentCategoryId = table.Column<int>(type: "int", nullable: true),
                     created_at = table.Column<DateTime>(type: "datetime(6)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_categories", x => x.id);
                     table.ForeignKey(
-                        name: "FK_categories_categories_parent_category_id",
-                        column: x => x.parent_category_id,
+                        name: "FK_categories_categories_ParentCategoryId",
+                        column: x => x.ParentCategoryId,
                         principalTable: "categories",
                         principalColumn: "id");
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "classified_media_files",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    ClassifiedId = table.Column<int>(type: "int", nullable: false),
+                    url = table.Column<string>(type: "longtext", nullable: false),
+                    created_at = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    updated_at = table.Column<DateTime>(type: "datetime(6)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_classified_media_files", x => x.id);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
@@ -65,7 +82,7 @@ namespace MyAds.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "orders",
+                name: "classifieds",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "int", nullable: false)
@@ -82,15 +99,15 @@ namespace MyAds.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_orders", x => x.id);
+                    table.PrimaryKey("PK_classifieds", x => x.id);
                     table.ForeignKey(
-                        name: "FK_orders_categories_CategoryId",
+                        name: "FK_classifieds_categories_CategoryId",
                         column: x => x.CategoryId,
                         principalTable: "categories",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_orders_users_UserId",
+                        name: "FK_classifieds_users_UserId",
                         column: x => x.UserId,
                         principalTable: "users",
                         principalColumn: "id",
@@ -99,18 +116,18 @@ namespace MyAds.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateIndex(
-                name: "IX_categories_parent_category_id",
+                name: "IX_categories_ParentCategoryId",
                 table: "categories",
-                column: "parent_category_id");
+                column: "ParentCategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_orders_CategoryId",
-                table: "orders",
+                name: "IX_classifieds_CategoryId",
+                table: "classifieds",
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_orders_UserId",
-                table: "orders",
+                name: "IX_classifieds_UserId",
+                table: "classifieds",
                 column: "UserId");
         }
 
@@ -118,7 +135,10 @@ namespace MyAds.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "orders");
+                name: "classified_media_files");
+
+            migrationBuilder.DropTable(
+                name: "classifieds");
 
             migrationBuilder.DropTable(
                 name: "categories");

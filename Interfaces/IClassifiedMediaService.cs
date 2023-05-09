@@ -8,7 +8,7 @@ namespace MyAds.Interfaces
         Task<ClassifiedMediaFile?> GetMediaFileById(int classifiedId);
         Task CreateMediaFile(ClassifiedMediaFile mediaFile);
         Task UpdateMediaFile(ClassifiedMediaFile mediaFile);
-        Task DeleteMediaFile(int mediaFileId);
+        Task DeleteMediaFile(ClassifiedMediaFile mediaFile);
         Task<string> UploadMediaFile(IFormFile file);
     }
 }

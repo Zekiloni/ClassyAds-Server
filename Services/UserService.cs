@@ -6,8 +6,8 @@ namespace MyAds.Services
 {
     public class UserService : IUserService
     {
-        private readonly Context _database;
-        public UserService(Context dbContext)
+        private readonly DatabaseContext _database;
+        public UserService(DatabaseContext dbContext)
         {
             _database = dbContext;
         }
