@@ -36,9 +36,9 @@ namespace MyAds.Entities
 
 
         [Required]
-        [DefaultValue(OrderStatus.Draft)]
+        [DefaultValue(ClassifiedStatus.Draft)]
         [Column("status")]
-        public OrderStatus Status { get; set; }
+        public ClassifiedStatus Status { get; set; }
 
         [Required]
         [Column("created_date")]

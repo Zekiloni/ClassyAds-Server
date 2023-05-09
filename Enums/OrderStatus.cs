@@ -1,6 +1,6 @@
 ﻿namespace MyAds.Enums
 {
-    public enum OrderStatus
+    public enum ClassifiedStatus
     {
         Draft,
         Processing,
