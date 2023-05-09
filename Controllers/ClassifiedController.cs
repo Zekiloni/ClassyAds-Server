@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MyAds.Interfaces;
 using MyAds.Entities;
 using MyAds.Models;
-using System.Linq;
+
 
 namespace MyAds.Controllers
 {
@@ -13,11 +13,13 @@ namespace MyAds.Controllers
     {
         private readonly IConfiguration _configuration;
         private readonly IClassifiedService _classifieds;
+        private readonly IUserService _users;
         private readonly IClassifiedMediaService _classifiedMedia;
 
-        public ClassifiedController(IClassifiedService classifieds, IClassifiedMediaService media, IConfiguration config)
+        public ClassifiedController(IClassifiedService classifieds, IUserService users, IClassifiedMediaService media, IConfiguration config)
         {
             _configuration = config;
+            _users = users;
             _classifieds = classifieds;
             _classifiedMedia = media;
         }
@@ -109,6 +111,29 @@ namespace MyAds.Controllers
             {
                 return BadRequest(errorCreating);
             }
+        }
+
+
+        [HttpDelete("classifieds/delete/{classifiedId}")]
+        [Authorize]
+        public async Task<IActionResult> DeleteClassified(int classifiedId)
+        {
+            var user = await _users.GetUserById((int)HttpContext.Items["UserId"]!);
+            var classified = await _classifieds.GetClassifiedById(classifiedId);
+
+            if (classified == null || user == null)
+            {
+                return NotFound();
+            }
+
+            if (classified.UserId != user.Id && user.Role < Enums.UserRole.Admin)
+            {
+                return Unauthorized();
+            }
+
+            await _classifieds.DeleteClassified(classified);
+
+            return Ok();
         }
     }
 }

@@ -8,13 +8,18 @@ namespace MyAds.Entities
     public class Category
     {
         [Key]
-        [Column("id")]
+        [Column("category_id")]
         public int Id { get; set; }
 
         [Required]
-        [Column("name")]
-        [MaxLength(50)]
+        [Column("category_name")]
+        [MaxLength(32)]
         public string Name { get; set; }
+
+        [Required]
+        [Column("category_description")]
+        [MaxLength(64)]
+        public string Description { get; set; }
 
         [DefaultValue(null)]
         [ForeignKey("parent_category_id")]

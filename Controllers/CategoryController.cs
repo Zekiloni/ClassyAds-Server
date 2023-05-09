@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using MyAds.Entities;
 using MyAds.Interfaces;
+using MyAds.Models;
 
 namespace MyAds.Controllers
 {
@@ -9,9 +12,11 @@ namespace MyAds.Controllers
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categories;
+        private readonly IUserService _users;
 
-        public CategoryController(ICategoryService categories) {
+        public CategoryController(ICategoryService categories, IUserService users) {
             _categories = categories;
+            _users = users;
         }
 
         [HttpGet("/categories")]
@@ -25,6 +30,39 @@ namespace MyAds.Controllers
             }
 
             return Ok(_categories);
+        }
+
+        [HttpPost("/categories/create")]
+        [Authorize]
+        public async Task<IActionResult> CreateCategory(CreateCategoryInput newCategory)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var user = await _users.GetUserById((int)HttpContext.Items["UserId"]!);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            if (!user.IsSuperAdmin)
+            {
+                return Unauthorized();
+            }
+
+            var parentCategory = newCategory.ParentCategoryId != null ? (await _categories.GetCategoryById(newCategory.ParentCategoryId.Value)) : null;
+
+            var category = new Category
+            {
+                Name = newCategory.Name,
+                Description = newCategory.Description,
+                ParentCategoryId = parentCategory?.Id
+            };
+
+            return Ok(category);
         }
     }
 }
