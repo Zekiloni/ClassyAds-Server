@@ -70,7 +70,7 @@ namespace MyAds.Entities
         public string HashedPassword { get; set; } = string.Empty;
 
         [Required]
-        [DefaultValue(UserRole.Customer)]
+        [DefaultValue(UserRole.User)]
         [Column("role")]
         public UserRole Role { get; set; }
 
