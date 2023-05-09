@@ -64,5 +64,21 @@ namespace MyAds.Controllers
 
             return Ok(category);
         }
+
+        [HttpDelete("/categories/{id}")]
+        [Authorize]
+        public async Task<IActionResult> DeleteCategory(int id)
+        {
+            var category = await _categories.GetCategoryById(id);
+
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+            await _categories.DeleteCategory(category);
+
+            return Ok();
+        }
     }
 }

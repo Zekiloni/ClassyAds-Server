@@ -7,7 +7,7 @@ namespace MyAds.Interfaces
         Task<IEnumerable<Category>> GetCategories();
         Task<Category> GetCategoryById(int categoryId);
         Task<Category> CreateCategory(Category category);
-        Task<Category> UpdateCategory(int categoryId, Category category);
-        Task DeleteCategory(int categoryId);
+        Task<Category> UpdateCategory(Category category);
+        Task DeleteCategory(Category category);
     }
 }
