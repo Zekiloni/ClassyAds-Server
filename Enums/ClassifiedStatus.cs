@@ -3,9 +3,9 @@
     public enum ClassifiedStatus
     {
         Draft,
-        Processing,
-        PreApproved,
-        Approved,
-        Declined
+        Active,
+        Expired,
+        Hidden,
+        Inactive
     }
 }

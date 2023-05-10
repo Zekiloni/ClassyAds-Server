@@ -33,17 +33,38 @@ namespace MyAds.Entities
         [Column("amount")]
         [DataType(DataType.Currency)]
         public decimal Amount { get; set; }
-
-
+        
         [Required]
+        [Column("is_negotiable")]
+        public bool IsNegotiable { get; set; }
+
+        [DefaultValue(null)]
+        [Column("product_make")]
+        public string Make { get; set; }
+
+        [DefaultValue(null)]
+        [Column("product_model")]
+        public string Model { get; set; }
+
         [DefaultValue(ClassifiedStatus.Draft)]
         [Column("status")]
         public ClassifiedStatus Status { get; set; }
 
-        [Required]
-        [Column("created_date")]
-        public DateTime CreatedAt { get; set; }
+        [DefaultValue(false)]
+        [Column("is_featured")]
+        public bool IsFeatured { get; set; }
 
+        [DefaultValue(false)]
+        [Column("is_premium")]
+        public bool IsPremium { get; set; }
+
+        [Column("created_date")]
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+        [Column("expiring_at")]
+        public DateTime ExpiringAt { get; set; } = DateTime.Now.AddDays(15);
+
+        [DefaultValue(null)]
         [Column("updated_date")]
         public DateTime? UpdatedAt { get; set; }
 

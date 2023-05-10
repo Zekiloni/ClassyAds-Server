@@ -9,6 +9,7 @@ using System.Text.Json.Serialization;
 namespace MyAds.Entities
 {
     [Table("users")]
+    [Index(nameof(Username), IsUnique = true)]
     public class User
     {
         [Key]
