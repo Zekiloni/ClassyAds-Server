@@ -44,6 +44,10 @@ namespace ClassyAdsServer.Migrations
                     b.Property<int?>("ParentCategoryId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("updated_at");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ParentCategoryId");
