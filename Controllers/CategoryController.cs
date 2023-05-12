@@ -29,7 +29,7 @@ namespace MyAds.Controllers
                 return NotFound();
             }
 
-            return Ok(_categories);
+            return Ok(categories);
         }
 
         [HttpPost("/categories/create")]
@@ -61,6 +61,8 @@ namespace MyAds.Controllers
                 Description = newCategory.Description,
                 ParentCategoryId = parentCategory?.Id
             };
+
+
 
             return Ok(category);
         }

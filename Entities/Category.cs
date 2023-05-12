@@ -29,6 +29,10 @@ namespace MyAds.Entities
         [Column("created_at")]
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
+        [DefaultValue(null)]
+        [Column("updated_at")]
+        public DateTime UpdatedAt { get; set; }
+
         public List<Classified>? Classifieds { get; set; }
         public Category? ParentCategory { get; set; }
         public List<Category> ChildCategories { get; set; }

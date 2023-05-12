@@ -1,33 +1,45 @@
-﻿using MyAds.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using MyAds.Entities;
 using MyAds.Interfaces;
 
 namespace MyAds.Services
 {
     public class CategoryService : ICategoryService
     {
-        public Task<Category> CreateCategory(Category category)
+        private readonly DatabaseContext _database;
+
+        public CategoryService(DatabaseContext dbContext)
         {
-            throw new NotImplementedException();
+            _database = dbContext;
         }
 
-        public Task DeleteCategory(int categoryId)
+        public async Task<IEnumerable<Category>> GetCategories()
         {
-            throw new NotImplementedException();
+            return await _database.Categories.ToListAsync();
         }
 
-        public Task<IEnumerable<Category>> GetCategories()
+        public async Task<Category?> GetCategoryById(int categoryId)
         {
-            throw new NotImplementedException();
+            return await _database.Categories.FirstOrDefaultAsync(c => c.Id == categoryId);
         }
 
-        public Task<Category> GetCategoryById(int categoryId)
+        public async Task CreateCategory(Category category)
         {
-            throw new NotImplementedException();
+            await _database.Categories.AddAsync(category);
+            await _database.SaveChangesAsync();
         }
 
-        public Task<Category> UpdateCategory(int categoryId, Category category)
+        public async Task DeleteCategory(Category category)
         {
-            throw new NotImplementedException();
+            _database.Categories.Remove(category);
+            await _database.SaveChangesAsync();
+        }
+
+        public async Task UpdateCategory(Category category)
+        {
+            category.UpdatedAt = DateTime.Now;
+            _database.Entry(category).State = EntityState.Modified;
+            await _database.SaveChangesAsync();
         }
     }
 }

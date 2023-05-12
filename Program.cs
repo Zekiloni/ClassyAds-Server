@@ -74,6 +74,13 @@ try
 
     app.UseHttpsRedirection();
 
+    app.UseCors(builder => {
+        builder.WithOrigins("http://localhost:8080")
+               .AllowAnyHeader()
+               .AllowAnyMethod()
+               .AllowCredentials();
+    });
+
     app.UseAuthentication();
     app.UseAuthorization();
     app.UseMiddleware<UserAuthentication>();

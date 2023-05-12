@@ -40,6 +40,10 @@ namespace MyAds.Entities
         [MaxLength(50)]
         public string? EmailAddress { get; set; }
 
+        [DefaultValue(false)]
+        [Column("is_email_verified")]
+        public bool IsEmailConfirmed { get; set; }
+
         [MaxLength(20)]
         [DefaultValue(null)]
         [Column("phone")]

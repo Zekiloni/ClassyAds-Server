@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace MyAds.Migrations
+namespace ClassyAdsServer.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
     partial class DatabaseContextModelSnapshot : ModelSnapshot
@@ -23,17 +23,23 @@ namespace MyAds.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasColumnName("id");
+                        .HasColumnName("category_id");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("created_at");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("varchar(64)")
+                        .HasColumnName("category_description");
+
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("name");
+                        .HasMaxLength(32)
+                        .HasColumnType("varchar(32)")
+                        .HasColumnName("category_name");
 
                     b.Property<int?>("ParentCategoryId")
                         .HasColumnType("int");
@@ -67,6 +73,32 @@ namespace MyAds.Migrations
                         .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("description");
+
+                    b.Property<DateTime>("ExpiringAt")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("expiring_at");
+
+                    b.Property<bool>("IsFeatured")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("is_featured");
+
+                    b.Property<bool>("IsNegotiable")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("is_negotiable");
+
+                    b.Property<bool>("IsPremium")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("is_premium");
+
+                    b.Property<string>("Make")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("product_make");
+
+                    b.Property<string>("Model")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("product_model");
 
                     b.Property<string>("ShortDescription")
                         .IsRequired()
@@ -164,6 +196,10 @@ namespace MyAds.Migrations
                         .HasColumnType("longtext")
                         .HasColumnName("hashed_password");
 
+                    b.Property<bool>("IsEmailConfirmed")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("is_email_verified");
+
                     b.Property<DateTime?>("LastLoginAt")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("last_login_at");
@@ -209,6 +245,9 @@ namespace MyAds.Migrations
                         .HasColumnName("username");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Username")
+                        .IsUnique();
 
                     b.ToTable("users");
                 });
