@@ -1,6 +1,6 @@
-﻿using ClassyAdsServer.Entities;
+﻿using MyAds.Entities;
 
-namespace ClassyAdsServer.Interfaces
+namespace MyAds.Interfaces
 {
     public interface INotificationService
     {
