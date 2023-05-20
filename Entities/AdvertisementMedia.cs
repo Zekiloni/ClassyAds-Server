@@ -5,16 +5,16 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace MyAds.Entities
 {
-    [Table("classified_media_files")]
-    public class ClassifiedMediaFile
+    [Table("advertisement_media_files")]
+    public class AdvertisementMediaFile
     {
         [Key]
         [Column("id")]
         public int Id { get; set; }
 
         [Required]
-        [ForeignKey("classified_id")]
-        public int ClassifiedId { get; set; }
+        [ForeignKey("advertisement_id")]
+        public int AdvertisementId { get; set; }
 
         [Required]
         [Column("url")]

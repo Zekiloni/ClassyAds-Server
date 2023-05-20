@@ -1,7 +1,7 @@
 ﻿
-# 📝 Classifieds App
+# 📝 Advertisements App
 
-Your classifieds app is an online platform that allows users to post classified advertisements for various categories such as real estate, vehicles, electronics, furniture, and more. 
+Your Advertisements app is an online platform that allows users to post Advertisement advertisements for various categories such as real estate, vehicles, electronics, furniture, and more. 
 
 ## 👨‍💻 Backend Overview
 

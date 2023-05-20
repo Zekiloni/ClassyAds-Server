@@ -22,8 +22,12 @@ namespace MyAds.Entities
         public string Description { get; set; }
 
         [DefaultValue(null)]
-        [ForeignKey("parent_category_id")]
+        [ForeignKey("ParentCategory")]
         public int? ParentCategoryId { get; set; }
+
+        [DefaultValue(false)]
+        [Column("is_featured")]
+        public bool IsFeatured { get; set; }
 
         [Required]
         [Column("created_at")]
@@ -33,8 +37,8 @@ namespace MyAds.Entities
         [Column("updated_at")]
         public DateTime UpdatedAt { get; set; }
 
-        public List<Classified>? Classifieds { get; set; }
-        public Category? ParentCategory { get; set; }
-        public List<Category> ChildCategories { get; set; }
+        public virtual List<Advertisement> Advertisements { get; set; }
+        public virtual Category ParentCategory { get; set; }
+        public virtual List<Category> ChildCategories { get; set; }
     }
 }

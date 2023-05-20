@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MyAds.Models
 {
-    public class ClassifiedSearchInput
+    public class AdvertisementSearchInput
     {
         [Required(ErrorMessage = "Search filter is required!")]
         [MinLength(3, ErrorMessage = "Search filter minimun 3 characters!")]

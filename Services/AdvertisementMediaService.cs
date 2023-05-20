@@ -6,40 +6,40 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MyAds.Services
 {
-    public class ClassifiedMediaFileService : IClassifiedMediaService
+    public class AdvertisementMediaFileService : IAdvertisementMediaService
     {
         private readonly DatabaseContext _database;
         private readonly IWebHostEnvironment _env;
 
-        public ClassifiedMediaFileService(DatabaseContext database, IWebHostEnvironment environment)
+        public AdvertisementMediaFileService(DatabaseContext database, IWebHostEnvironment environment)
         {
             _database = database;
             _env = environment;
         }
 
-        public async Task CreateMediaFile(ClassifiedMediaFile mediaFile)
+        public async Task CreateMediaFile(AdvertisementMediaFile mediaFile)
         {
             await _database.MediaFiles.AddAsync(mediaFile);
             await _database.SaveChangesAsync();
         }
 
-        public async Task DeleteMediaFile(ClassifiedMediaFile mediaFile)
+        public async Task DeleteMediaFile(AdvertisementMediaFile mediaFile)
         {
             _database.MediaFiles.Remove(mediaFile);
             await _database.SaveChangesAsync();
         }
 
-        public async Task<ClassifiedMediaFile?> GetMediaFileById(int mediaFileId)
+        public async Task<AdvertisementMediaFile?> GetMediaFileById(int mediaFileId)
         {
             return await _database.MediaFiles.FirstOrDefaultAsync(m => m.Id == mediaFileId);
         }
 
-        public Task<IEnumerable<ClassifiedMediaFile>> GetMediaFiles()
+        public Task<IEnumerable<AdvertisementMediaFile>> GetMediaFiles()
         {
             throw new NotImplementedException();
         }
 
-        public async Task UpdateMediaFile(ClassifiedMediaFile mediaFile)
+        public async Task UpdateMediaFile(AdvertisementMediaFile mediaFile)
         {
             mediaFile.UpdatedAt = DateTime.Now;
             _database.Entry(mediaFile).State = EntityState.Modified;
@@ -51,7 +51,7 @@ namespace MyAds.Services
             var fileExtension = Path.GetExtension(file.FileName);
             var uniqueId = Guid.NewGuid().ToString("N").Substring(0, 8);
             var newFileName = $"{uniqueId}{fileExtension}";
-            var filePath = Path.Combine(_env.ContentRootPath, "uploads/classifieds", newFileName);
+            var filePath = Path.Combine(_env.ContentRootPath, "uploads/Advertisements", newFileName);
 
             using (var stream = new FileStream(filePath, FileMode.Create))
             {

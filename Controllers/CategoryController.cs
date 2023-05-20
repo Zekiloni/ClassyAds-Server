@@ -4,11 +4,11 @@ using MyAds.Entities;
 using MyAds.Interfaces;
 using MyAds.Models;
 
+
 namespace MyAds.Controllers
 {
     [ApiController]
     [Route("api/{controller}")]
-
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categories;

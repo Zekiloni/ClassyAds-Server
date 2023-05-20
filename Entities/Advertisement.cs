@@ -5,15 +5,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyAds.Entities
 {
-    [Table("classifieds")]
-    public class Classified
+    [Table("advertisements")]
+    public class Advertisement
     {
         [Key]
         [Column("id")]
         public int Id { get; set; }
 
         [Required]
-        [ForeignKey("category_id")]
+        [ForeignKey("Category")]
         public int CategoryId { get; set; }
 
         [Required]
@@ -46,9 +46,9 @@ namespace MyAds.Entities
         [Column("product_model")]
         public string Model { get; set; }
 
-        [DefaultValue(ClassifiedStatus.Draft)]
+        [DefaultValue(AdvertisementStatus.Draft)]
         [Column("status")]
-        public ClassifiedStatus Status { get; set; }
+        public AdvertisementStatus Status { get; set; }
 
         [DefaultValue(false)]
         [Column("is_featured")]
@@ -69,11 +69,11 @@ namespace MyAds.Entities
         public DateTime? UpdatedAt { get; set; }
 
         [Required]
-        [ForeignKey("user_id")]
+        [ForeignKey("User")]
         public int UserId { get; set; }
 
-        public User? User { get; set; }
+        public virtual User User { get; set; }
 
-        public Category? Category { get; set; }
+        public virtual Category Category { get; set; }
     }
 }

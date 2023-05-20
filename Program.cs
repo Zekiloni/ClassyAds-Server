@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using MyAds.Interfaces;
 using MyAds.Middlewares;
 using MyAds.Services;
+using MySql.EntityFrameworkCore.Infrastructure.Internal;
 using System.Text;
 
 
@@ -29,8 +30,8 @@ builder.Services.AddDbContextPool<DatabaseContext>(options =>
 // Application services
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
-builder.Services.AddScoped<IClassifiedService, ClassifiedService>();
-builder.Services.AddScoped<IClassifiedMediaService, ClassifiedMediaFileService>();
+builder.Services.AddScoped<IAdvertisementService, AdvertisementService>();
+builder.Services.AddScoped<IAdvertisementMediaService, AdvertisementMediaFileService>();
 
 
 // Adding controllers

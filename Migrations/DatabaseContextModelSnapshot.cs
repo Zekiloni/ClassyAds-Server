@@ -55,7 +55,7 @@ namespace ClassyAdsServer.Migrations
                     b.ToTable("categories");
                 });
 
-            modelBuilder.Entity("MyAds.Entities.Classified", b =>
+            modelBuilder.Entity("MyAds.Entities.Advertisement", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -132,17 +132,17 @@ namespace ClassyAdsServer.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("classifieds");
+                    b.ToTable("Advertisements");
                 });
 
-            modelBuilder.Entity("MyAds.Entities.ClassifiedMediaFile", b =>
+            modelBuilder.Entity("MyAds.Entities.AdvertisementMediaFile", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("id");
 
-                    b.Property<int>("ClassifiedId")
+                    b.Property<int>("AdvertisementId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
@@ -160,7 +160,7 @@ namespace ClassyAdsServer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("classified_media_files");
+                    b.ToTable("Advertisement_media_files");
                 });
 
             modelBuilder.Entity("MyAds.Entities.User", b =>
@@ -265,10 +265,10 @@ namespace ClassyAdsServer.Migrations
                     b.Navigation("ParentCategory");
                 });
 
-            modelBuilder.Entity("MyAds.Entities.Classified", b =>
+            modelBuilder.Entity("MyAds.Entities.Advertisement", b =>
                 {
                     b.HasOne("MyAds.Entities.Category", "Category")
-                        .WithMany("Classifieds")
+                        .WithMany("Advertisements")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -288,7 +288,7 @@ namespace ClassyAdsServer.Migrations
                 {
                     b.Navigation("ChildCategories");
 
-                    b.Navigation("Classifieds");
+                    b.Navigation("Advertisements");
                 });
 
             modelBuilder.Entity("MyAds.Entities.User", b =>

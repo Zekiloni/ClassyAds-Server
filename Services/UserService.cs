@@ -46,7 +46,7 @@ namespace MyAds.Services
             return await _database.Users.ToListAsync();
         }
 
-        public async Task<IEnumerable<Classified>?> GetUserOrders(int userId)
+        public async Task<IEnumerable<Advertisement>?> GetUserOrders(int userId)
         {
             var user = await _database.Users
                 .Include(u => u.Orders)

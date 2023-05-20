@@ -1,6 +1,6 @@
 ﻿namespace MyAds.Enums
 {
-    public enum ClassifiedStatus
+    public enum AdvertisementStatus
     {
         Draft,
         Active,
