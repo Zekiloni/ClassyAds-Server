@@ -113,7 +113,7 @@ namespace MyAds.Controllers
         }
 
 
-        [HttpDelete("/delete/{advertisementId}")]
+        [HttpDelete("/advertisements/delete/{advertisementId}")]
         [Authorize]
         public async Task<IActionResult> DeleteAdvertisement(int advertisementId)
         {
