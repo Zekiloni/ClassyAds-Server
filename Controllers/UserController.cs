@@ -7,6 +7,8 @@ using System.Security.Claims;
 using System.Text;
 using MyAds.Models;
 using Microsoft.AspNetCore.Authorization;
+using System.Net;
+using ClassyAdsServer.Models;
 
 namespace MyAds.Controllers
 {
@@ -80,7 +82,7 @@ namespace MyAds.Controllers
 
             if (user == null)
             {
-                return NotFound();
+                return StatusCode((int)HttpStatusCode.NotFound, new ErrorResponse("Username not found.", null));
             }
 
             if (BCrypt.Net.BCrypt.Verify(loginUser.Password, user.HashedPassword))
@@ -105,7 +107,7 @@ namespace MyAds.Controllers
             }
             else
             {
-                return Unauthorized("Invalid password !");
+                return StatusCode((int)HttpStatusCode.Unauthorized, new ErrorResponse("Incorrect password.", null));
             }
         }
 

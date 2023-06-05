@@ -3,18 +3,17 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using MyAds.Interfaces;
-using MyAds.Entities;
 using System.Net;
+
 
 namespace MyAds.Middlewares
 {
-    public class UserAuthentication
+    public class UserAuthenticationMiddleware
     {
         private readonly RequestDelegate _next;
         private readonly IConfiguration _configuration;
 
-        public UserAuthentication(RequestDelegate next, IConfiguration config)
+        public UserAuthenticationMiddleware(RequestDelegate next, IConfiguration config)
         {
             _next = next;
             _configuration = config;

@@ -3,36 +3,36 @@ using Microsoft.AspNetCore.Mvc;
 using MyAds.Interfaces;
 using MyAds.Entities;
 using MyAds.Models;
-
+using System.Net;
+using ClassyAdsServer.Models;
 
 namespace MyAds.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
     public class AdvertisementController : ControllerBase
     {
         private readonly IConfiguration _configuration;
-        private readonly IAdvertisementService _Advertisements;
+        private readonly IAdvertisementService _advertisements;
         private readonly IUserService _users;
-        private readonly IAdvertisementMediaService _AdvertisementMedia;
+        private readonly IAdvertisementMediaService _advertisementMedia;
 
-        public AdvertisementController(IAdvertisementService Advertisements, IUserService users, IAdvertisementMediaService media, IConfiguration config)
+        public AdvertisementController(IAdvertisementService advertisements, IUserService users, IAdvertisementMediaService media, IConfiguration config)
         {
             _configuration = config;
             _users = users;
-            _Advertisements = Advertisements;
-            _AdvertisementMedia = media;
+            _advertisements = advertisements;
+            _advertisementMedia = media;
         }
 
-        [HttpPost("/Advertisements/search")]
+        [HttpPost("/advertisements/search")]
         public async Task<IActionResult> SearchAdvertisements(AdvertisementSearchInput searchAdvertisement)
         {
-            var Advertisements = await _Advertisements.GetAdvertisementsByFilter(searchAdvertisement.Filter, searchAdvertisement.CategoryId);
+            var advertisements = await _advertisements.GetAdvertisementsByFilter(searchAdvertisement.Filter, searchAdvertisement.CategoryId);
 
-            var totalNumberOfRecords = Advertisements.Count();
+            var totalNumberOfRecords = advertisements.Count();
             var totalNumberOfPages = (int)Math.Ceiling((double)totalNumberOfRecords / searchAdvertisement.PageSize);
 
-            var AdvertisementsCurrentPage = Advertisements
+            var advertisementsCurrentPage = advertisements
                 .Skip((searchAdvertisement.PageNumber - 1) * searchAdvertisement.PageSize)
                 .Take(searchAdvertisement.PageSize);
 
@@ -42,28 +42,27 @@ namespace MyAds.Controllers
                 PageSize = searchAdvertisement.PageSize,
                 TotalNumberOfPages = totalNumberOfPages,
                 TotalNumberOfRecords = totalNumberOfRecords,
-                Results = AdvertisementsCurrentPage
+                Results = advertisementsCurrentPage
             };
 
             return Ok(pagedOutput);
         }
 
-        [HttpGet("/Advertisements/{AdvertisementId}")]
+        [HttpGet("/advertisements/{advertisementId}")]
         [Authorize]
-        public async Task<IActionResult> GetAdvertisementById(int AdvertisementId)
+        public async Task<IActionResult> GetAdvertisementById(int advertisementId)
         {
+            var advertisement = await _advertisements.GetAdvertisementById(advertisementId);
 
-            var Advertisement = await _Advertisements.GetAdvertisementById(AdvertisementId);
-
-            if (Advertisement == null)
+            if (advertisement == null)
             {
-                return NotFound();
+                return StatusCode((int)HttpStatusCode.NotFound, new ErrorResponse("Advertisement not found.", "Advertisement may be not active or is deleted."));
             }
 
-            return Ok(Advertisement);
+            return Ok(advertisement);
         }
 
-        [HttpPost("/Advertisements/create")]
+        [HttpPost("/advertisements/create")]
         [Authorize]
         public async Task<IActionResult> CreateAdvertisement(NewAdvertisementInput newAdvertisement)
         {
@@ -90,19 +89,19 @@ namespace MyAds.Controllers
                     return BadRequest();
                 }
 
-                await _Advertisements.CreateAdvertisement(Advertisement);
+                await _advertisements.CreateAdvertisement(Advertisement);
 
                 foreach (var file in newAdvertisement.MediaFiles)
                 {
                     var mediaFile = new AdvertisementMediaFile
                     {
                         AdvertisementId = Advertisement.Id,
-                        Url = await _AdvertisementMedia.UploadMediaFile(file)
+                        Url = await _advertisementMedia.UploadMediaFile(file)
                     };
 
                     if (mediaFile != null)
                     {
-                        await _AdvertisementMedia.CreateMediaFile(mediaFile);
+                        await _advertisementMedia.CreateMediaFile(mediaFile);
                     }
                 }
                 return Ok(Advertisement);
@@ -114,24 +113,24 @@ namespace MyAds.Controllers
         }
 
 
-        [HttpDelete("Advertisements/delete/{AdvertisementId}")]
+        [HttpDelete("/delete/{advertisementId}")]
         [Authorize]
-        public async Task<IActionResult> DeleteAdvertisement(int AdvertisementId)
+        public async Task<IActionResult> DeleteAdvertisement(int advertisementId)
         {
             var user = await _users.GetUserById((int)HttpContext.Items["UserId"]!);
-            var Advertisement = await _Advertisements.GetAdvertisementById(AdvertisementId);
+            var advertisement = await _advertisements.GetAdvertisementById(advertisementId);
 
-            if (Advertisement == null || user == null)
+            if (advertisement == null || user == null)
             {
                 return NotFound();
             }
 
-            if (Advertisement.UserId != user.Id && user.Role < Enums.UserRole.Admin)
+            if (advertisement.UserId != user.Id && user.Role < Enums.UserRole.Admin)
             {
                 return Unauthorized();
             }
 
-            await _Advertisements.DeleteAdvertisement(Advertisement);
+            await _advertisements.DeleteAdvertisement(advertisement);
 
             return Ok();
         }

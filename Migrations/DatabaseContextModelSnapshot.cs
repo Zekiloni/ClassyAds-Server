@@ -18,43 +18,6 @@ namespace ClassyAdsServer.Migrations
                 .HasAnnotation("ProductVersion", "7.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("MyAds.Entities.Category", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("category_id");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("created_at");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("varchar(64)")
-                        .HasColumnName("category_description");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("varchar(32)")
-                        .HasColumnName("category_name");
-
-                    b.Property<int?>("ParentCategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("updated_at");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ParentCategoryId");
-
-                    b.ToTable("categories");
-                });
-
             modelBuilder.Entity("MyAds.Entities.Advertisement", b =>
                 {
                     b.Property<int>("Id")
@@ -132,7 +95,7 @@ namespace ClassyAdsServer.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Advertisements");
+                    b.ToTable("advertisements");
                 });
 
             modelBuilder.Entity("MyAds.Entities.AdvertisementMediaFile", b =>
@@ -160,7 +123,117 @@ namespace ClassyAdsServer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Advertisement_media_files");
+                    b.ToTable("advertisement_media_files");
+                });
+
+            modelBuilder.Entity("MyAds.Entities.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("category_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("varchar(64)")
+                        .HasColumnName("category_description");
+
+                    b.Property<bool>("IsFeatured")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("is_featured");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("varchar(32)")
+                        .HasColumnName("category_name");
+
+                    b.Property<int?>("ParentCategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentCategoryId");
+
+                    b.ToTable("categories");
+                });
+
+            modelBuilder.Entity("MyAds.Entities.Notification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("created_at");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("is_read");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("notifications");
+                });
+
+            modelBuilder.Entity("MyAds.Entities.Review", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    b.Property<int>("AdvertisementId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Comment")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("comment");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("created_at");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int")
+                        .HasColumnName("rating");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdvertisementId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("reviews");
                 });
 
             modelBuilder.Entity("MyAds.Entities.User", b =>
@@ -256,15 +329,6 @@ namespace ClassyAdsServer.Migrations
                     b.ToTable("users");
                 });
 
-            modelBuilder.Entity("MyAds.Entities.Category", b =>
-                {
-                    b.HasOne("MyAds.Entities.Category", "ParentCategory")
-                        .WithMany("ChildCategories")
-                        .HasForeignKey("ParentCategoryId");
-
-                    b.Navigation("ParentCategory");
-                });
-
             modelBuilder.Entity("MyAds.Entities.Advertisement", b =>
                 {
                     b.HasOne("MyAds.Entities.Category", "Category")
@@ -274,7 +338,7 @@ namespace ClassyAdsServer.Migrations
                         .IsRequired();
 
                     b.HasOne("MyAds.Entities.User", "User")
-                        .WithMany("Orders")
+                        .WithMany("Advertisements")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -286,14 +350,53 @@ namespace ClassyAdsServer.Migrations
 
             modelBuilder.Entity("MyAds.Entities.Category", b =>
                 {
-                    b.Navigation("ChildCategories");
+                    b.HasOne("MyAds.Entities.Category", "ParentCategory")
+                        .WithMany("ChildCategories")
+                        .HasForeignKey("ParentCategoryId");
 
+                    b.Navigation("ParentCategory");
+                });
+
+            modelBuilder.Entity("MyAds.Entities.Notification", b =>
+                {
+                    b.HasOne("MyAds.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("MyAds.Entities.Review", b =>
+                {
+                    b.HasOne("MyAds.Entities.Advertisement", "Advertisement")
+                        .WithMany()
+                        .HasForeignKey("AdvertisementId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MyAds.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Advertisement");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("MyAds.Entities.Category", b =>
+                {
                     b.Navigation("Advertisements");
+
+                    b.Navigation("ChildCategories");
                 });
 
             modelBuilder.Entity("MyAds.Entities.User", b =>
                 {
-                    b.Navigation("Orders");
+                    b.Navigation("Advertisements");
                 });
 #pragma warning restore 612, 618
         }

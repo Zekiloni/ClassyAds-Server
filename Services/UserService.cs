@@ -2,6 +2,7 @@
 using MyAds.Entities;
 using MyAds.Interfaces;
 
+
 namespace MyAds.Services
 {
     public class UserService : IUserService
@@ -49,10 +50,10 @@ namespace MyAds.Services
         public async Task<IEnumerable<Advertisement>?> GetUserOrders(int userId)
         {
             var user = await _database.Users
-                .Include(u => u.Orders)
+                .Include(u => u.Advertisements)
                 .FirstOrDefaultAsync(u => u.Id == userId);
 
-            return user is not null ? user.Orders : null;
+            return user?.Advertisements;
         }
     }
 }

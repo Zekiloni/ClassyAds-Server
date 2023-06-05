@@ -84,7 +84,7 @@ try
 
     app.UseAuthentication();
     app.UseAuthorization();
-    app.UseMiddleware<UserAuthentication>();
+    app.UseMiddleware<UserAuthenticationMiddleware>(configuration);
 
     app.MapControllers();
 
