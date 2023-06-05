@@ -11,14 +11,12 @@ namespace MyAds.Controllers
     [ApiController]
     public class AdvertisementController : ControllerBase
     {
-        private readonly IConfiguration _configuration;
         private readonly IAdvertisementService _advertisements;
         private readonly IUserService _users;
         private readonly IAdvertisementMediaService _advertisementMedia;
 
-        public AdvertisementController(IAdvertisementService advertisements, IUserService users, IAdvertisementMediaService media, IConfiguration config)
+        public AdvertisementController(IAdvertisementService advertisements, IUserService users, IAdvertisementMediaService media)
         {
-            _configuration = config;
             _users = users;
             _advertisements = advertisements;
             _advertisementMedia = media;
@@ -111,7 +109,6 @@ namespace MyAds.Controllers
                 return BadRequest(errorCreating);
             }
         }
-
 
         [HttpDelete("/advertisements/delete/{advertisementId}")]
         [Authorize]

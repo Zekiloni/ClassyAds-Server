@@ -13,7 +13,6 @@ using ClassyAdsServer.Models;
 namespace MyAds.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
     public class UserController : ControllerBase
     {
         private readonly IConfiguration _configuration;
@@ -30,38 +29,36 @@ namespace MyAds.Controllers
             var tokenHandler = new JwtSecurityTokenHandler();
             var secretKey = _configuration.GetValue<string>("Jwt:Secret");
 
-            if (secretKey == null)
+            if (secretKey != null)
             {
-                throw new Exception("secretKey is null");
-            }
+                var key = Encoding.ASCII.GetBytes(secretKey);
 
-            var key = Encoding.ASCII.GetBytes(secretKey);
-
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new Claim[]
+                var tokenDescriptor = new SecurityTokenDescriptor
                 {
+                    Subject = new ClaimsIdentity(new Claim[]
+                    {
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                     new Claim(ClaimTypes.Name, user.Username),
-                }),
-                Expires = DateTime.UtcNow.AddHours(1),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
+                    }),
+                    Expires = DateTime.UtcNow.AddHours(1),
+                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                };
 
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
+                var token = tokenHandler.CreateToken(tokenDescriptor);
+                return tokenHandler.WriteToken(token);
+            }
+            throw new Exception("secretKey is null");
         }
 
         [HttpGet("/users/{userId}")]
         [Authorize]
         public async Task<IActionResult> GetUserById(int userId)
         {
-            var logUser = HttpContext.Items["User"] as User;
-
-            if (logUser == null)
+            if (HttpContext.Items["UserId"] is not int)
             {
                 Console.WriteLine("logUser is null");
-            } else
+            }
+            else
             {
                 Console.WriteLine("logUser is something");
             }

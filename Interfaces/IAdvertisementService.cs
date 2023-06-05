@@ -4,11 +4,11 @@ namespace MyAds.Interfaces
 {
     public interface IAdvertisementService
     {
-        Task<Advertisement?> GetAdvertisementById(int AdvertisementId);
+        Task<Advertisement?> GetAdvertisementById(int advertisementId);
         Task<IEnumerable<Advertisement>> GetAllAdvertisements();
         Task<IEnumerable<Advertisement>> GetAdvertisementsByFilter(string filter, int? categoryId);
-        Task CreateAdvertisement(Advertisement Advertisement);
-        Task UpdateAdvertisement(Advertisement Advertisement);
-        Task DeleteAdvertisement(Advertisement Advertisement);
+        Task CreateAdvertisement(Advertisement advertisement);
+        Task UpdateAdvertisement(Advertisement advertisement);
+        Task DeleteAdvertisement(Advertisement advertisement);
     }
 }

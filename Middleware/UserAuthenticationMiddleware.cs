@@ -59,12 +59,12 @@ namespace MyAds.Middlewares
             await _next(context);
         }
 
-        private string? GetTokenFromHeader(IHeaderDictionary headers)
+        private static string? GetTokenFromHeader(IHeaderDictionary headers)
         {
             var authHeader = headers["Authorization"].FirstOrDefault();
             if (authHeader != null && authHeader.StartsWith("Bearer "))
             {
-                return authHeader.Substring("Bearer ".Length);
+                return authHeader["Bearer ".Length..];
             }
             else
             {
