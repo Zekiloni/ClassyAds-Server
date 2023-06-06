@@ -14,6 +14,7 @@ namespace MyAds.Entities
 
         [Required]
         [ForeignKey("Category")]
+        [Column("category_id")]
         public int CategoryId { get; set; }
 
         [Required]
@@ -70,6 +71,7 @@ namespace MyAds.Entities
 
         [Required]
         [ForeignKey("User")]
+        [Column("user_id")]
         public int UserId { get; set; }
 
         public virtual User User { get; set; }

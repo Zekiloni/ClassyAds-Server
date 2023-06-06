@@ -1,5 +1,4 @@
-﻿using MyAds.Entities;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -13,10 +12,16 @@ namespace MyAds.Entities
         public int Id { get; set; }
 
         [ForeignKey("User")]
+        [Column("user_id")]
         public int UserId { get; set; }
 
+        [DataType(DataType.Text)]
+        [MaxLength(64)]
+        [Column("title")]
         public string Title { get; set; }
 
+        [DataType(DataType.Text)]
+        [Column("description")]
         public string Content { get; set; }
 
         [DefaultValue(false)]

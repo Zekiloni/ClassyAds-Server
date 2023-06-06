@@ -39,7 +39,9 @@ namespace MyAds.Entities
         public DateTime? UpdatedAt { get; set; }
 
         public virtual List<Advertisement> Advertisements { get; set; }
+
         public virtual Category ParentCategory { get; set; }
+
         public virtual List<Category> ChildCategories { get; set; }
     }
 }

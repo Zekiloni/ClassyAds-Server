@@ -12,10 +12,13 @@ namespace MyAds.Entities
         [Column("id")]
         public int Id { get; set; }
 
+        [Required]
         [ForeignKey("Advertisement")]
+        [Column("advertisement_id")]
         public int AdvertisementId { get; set; }
 
         [ForeignKey("User")]
+        [Column("user_id")]
         public int UserId { get; set; }
 
         [Required]
