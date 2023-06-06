@@ -32,8 +32,8 @@ namespace MyAds.Controllers
             return Ok(categories);
         }
 
-        [HttpPost("/categories/create")]
         [Authorize]
+        [HttpPost("/categories/create")]
         public async Task<IActionResult> CreateCategory(CreateCategoryInput newCategory)
         {
             if (!ModelState.IsValid)
@@ -73,11 +73,12 @@ namespace MyAds.Controllers
         [HttpPost("/categories/update")]
         public async Task<IActionResult> UpdateCategory()
         {
+
             return Ok();
         }
 
-        [HttpDelete("/categories/{id}")]
         [Authorize]
+        [HttpDelete("/categories/{id}")]
         public async Task<IActionResult> DeleteCategory(int id)
         {
             var category = await _categories.GetCategoryById(id);

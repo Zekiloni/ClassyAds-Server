@@ -59,8 +59,8 @@ namespace MyAds.Controllers
             return Ok(advertisement);
         }
 
-        [HttpPost("/advertisements/create")]
         [Authorize]
+        [HttpPost("/advertisements/create")]
         public async Task<IActionResult> CreateAdvertisement(CreateAdvertisementInput newAdvertisement)
         {
             var user = _users.GetUserById((int)HttpContext.Items["UserId"]!);
@@ -113,8 +113,8 @@ namespace MyAds.Controllers
             }
         }
 
-        [HttpDelete("/advertisements/delete/{advertisementId}")]
         [Authorize]
+        [HttpDelete("/advertisements/delete/{advertisementId}")]
         public async Task<IActionResult> DeleteAdvertisement(int advertisementId)
         {
             var user = await _users.GetUserById((int)HttpContext.Items["UserId"]!);
