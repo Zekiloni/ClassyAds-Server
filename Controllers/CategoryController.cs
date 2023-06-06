@@ -1,14 +1,14 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using ClassyAdsServer.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyAds.Entities;
 using MyAds.Interfaces;
 using MyAds.Models;
-
+using System.Net;
 
 namespace MyAds.Controllers
 {
     [ApiController]
-    [Route("api/{controller}")]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categories;
@@ -45,12 +45,15 @@ namespace MyAds.Controllers
 
             if (user == null)
             {
-                return NotFound();
+                return StatusCode(
+                    (int)HttpStatusCode.NotFound, 
+                    new ErrorResponse("User not found.", "User account by your active session id not found or maybe is deleted.")
+                );
             }
 
             if (!user.IsSuperAdmin)
             {
-                return Unauthorized();
+                return StatusCode((int)HttpStatusCode.Unauthorized, new ErrorResponse("You are not authorized.", null));
             }
 
             var parentCategory = newCategory.ParentCategoryId != null ? (await _categories.GetCategoryById(newCategory.ParentCategoryId.Value)) : null;
@@ -62,9 +65,15 @@ namespace MyAds.Controllers
                 ParentCategoryId = parentCategory?.Id
             };
 
-
+            await _categories.CreateCategory(category);
 
             return Ok(category);
+        }
+
+        [HttpPost("/categories/update")]
+        public async Task<IActionResult> UpdateCategory()
+        {
+            return Ok();
         }
 
         [HttpDelete("/categories/{id}")]

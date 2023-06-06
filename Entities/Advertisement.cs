@@ -40,11 +40,11 @@ namespace MyAds.Entities
 
         [DefaultValue(null)]
         [Column("product_make")]
-        public string Make { get; set; }
+        public string? ProductMake { get; set; }
 
         [DefaultValue(null)]
         [Column("product_model")]
-        public string Model { get; set; }
+        public string? ProductModel { get; set; }
 
         [DefaultValue(AdvertisementStatus.Draft)]
         [Column("status")]

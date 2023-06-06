@@ -57,13 +57,11 @@ namespace ClassyAdsServer.Migrations
                         .HasColumnType("tinyint(1)")
                         .HasColumnName("is_premium");
 
-                    b.Property<string>("Make")
-                        .IsRequired()
+                    b.Property<string>("ProductMake")
                         .HasColumnType("longtext")
                         .HasColumnName("product_make");
 
-                    b.Property<string>("Model")
-                        .IsRequired()
+                    b.Property<string>("ProductModel")
                         .HasColumnType("longtext")
                         .HasColumnName("product_model");
 
@@ -154,9 +152,10 @@ namespace ClassyAdsServer.Migrations
                         .HasColumnName("category_name");
 
                     b.Property<int?>("ParentCategoryId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("parent_category_id");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("updated_at");
 
@@ -334,13 +333,13 @@ namespace ClassyAdsServer.Migrations
                     b.HasOne("MyAds.Entities.Category", "Category")
                         .WithMany("Advertisements")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("MyAds.Entities.User", "User")
                         .WithMany("Advertisements")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Category");

@@ -18,12 +18,14 @@ public class DatabaseContext : DbContext
         modelBuilder.Entity<Advertisement>()
             .HasOne(c => c.User)
             .WithMany(u => u.Advertisements)
-            .HasForeignKey(c => c.UserId);
+            .HasForeignKey(c => c.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<Advertisement>()
             .HasOne(c => c.Category)
             .WithMany(c => c.Advertisements)
-            .HasForeignKey(c => c.CategoryId);
+            .HasForeignKey(c => c.CategoryId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 };
 

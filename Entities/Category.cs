@@ -17,12 +17,13 @@ namespace MyAds.Entities
         public string Name { get; set; }
 
         [Required]
-        [Column("category_description")]
         [MaxLength(64)]
+        [Column("category_description")]
         public string Description { get; set; }
 
         [DefaultValue(null)]
         [ForeignKey("ParentCategory")]
+        [Column("parent_category_id")]
         public int? ParentCategoryId { get; set; }
 
         [DefaultValue(false)]
@@ -35,7 +36,7 @@ namespace MyAds.Entities
 
         [DefaultValue(null)]
         [Column("updated_at")]
-        public DateTime UpdatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
 
         public virtual List<Advertisement> Advertisements { get; set; }
         public virtual Category ParentCategory { get; set; }

@@ -47,29 +47,7 @@ namespace MyAds.Controllers
                 var token = tokenHandler.CreateToken(tokenDescriptor);
                 return tokenHandler.WriteToken(token);
             }
-            throw new Exception("secretKey is null");
-        }
-
-        [HttpGet("/users/{userId}")]
-        [Authorize]
-        public async Task<IActionResult> GetUserById(int userId)
-        {
-            if (HttpContext.Items["UserId"] is not int)
-            {
-                Console.WriteLine("logUser is null");
-            }
-            else
-            {
-                Console.WriteLine("logUser is something");
-            }
-
-            var user = await _users.GetUserById(userId);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(user);
+            throw new Exception("Secret JWT key is not defined in appsettings.json");
         }
 
         [HttpPost("/users/login")]
@@ -136,6 +114,20 @@ namespace MyAds.Controllers
             {
                 user
             });
+        }
+
+        [HttpGet("/users/{userId}")]
+        [Authorize]
+        public async Task<IActionResult> GetUserById(int userId)
+        {
+            var user = await _users.GetUserById(userId);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(user);
         }
     }
 }

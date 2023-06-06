@@ -47,7 +47,6 @@ namespace MyAds.Controllers
         }
 
         [HttpGet("/advertisements/{advertisementId}")]
-        [Authorize]
         public async Task<IActionResult> GetAdvertisementById(int advertisementId)
         {
             var advertisement = await _advertisements.GetAdvertisementById(advertisementId);
@@ -62,38 +61,42 @@ namespace MyAds.Controllers
 
         [HttpPost("/advertisements/create")]
         [Authorize]
-        public async Task<IActionResult> CreateAdvertisement(NewAdvertisementInput newAdvertisement)
+        public async Task<IActionResult> CreateAdvertisement(CreateAdvertisementInput newAdvertisement)
         {
-            var userAuthorId = (int)HttpContext.Items["UserId"]!;
+            var user = _users.GetUserById((int)HttpContext.Items["UserId"]!);
 
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
+            if (user == null) { 
+                return StatusCode((int)HttpStatusCode.Unauthorized, new ErrorResponse("You are not authorized.", null));
+            }
+
             try
             {
-                var Advertisement = new Advertisement
+                var advertisement = new Advertisement
                 {
                     CategoryId = newAdvertisement.CategoryId,
                     Title = newAdvertisement.Title,
                     ShortDescription = newAdvertisement.ShortDescription,
                     Description = newAdvertisement.Description,
-                    UserId = userAuthorId
+                    UserId = user.Id
                 };
 
-                if (Advertisement == null)
+                if (advertisement == null)
                 {
                     return BadRequest();
                 }
 
-                await _advertisements.CreateAdvertisement(Advertisement);
+                await _advertisements.CreateAdvertisement(advertisement);
 
                 foreach (var file in newAdvertisement.MediaFiles)
                 {
                     var mediaFile = new AdvertisementMediaFile
                     {
-                        AdvertisementId = Advertisement.Id,
+                        AdvertisementId = advertisement.Id,
                         Url = await _advertisementMedia.UploadMediaFile(file)
                     };
 
@@ -102,7 +105,7 @@ namespace MyAds.Controllers
                         await _advertisementMedia.CreateMediaFile(mediaFile);
                     }
                 }
-                return Ok(Advertisement);
+                return Ok(advertisement);
             }
             catch (Exception errorCreating)
             {
