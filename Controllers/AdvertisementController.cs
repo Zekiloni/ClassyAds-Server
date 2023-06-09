@@ -92,19 +92,23 @@ namespace MyAds.Controllers
 
                 await _advertisements.CreateAdvertisement(advertisement);
 
-                foreach (var file in newAdvertisement.MediaFiles)
+                if (newAdvertisement.MediaFiles != null)
                 {
-                    var mediaFile = new AdvertisementMediaFile
+                    foreach (var file in newAdvertisement.MediaFiles)
                     {
-                        AdvertisementId = advertisement.Id,
-                        Url = await _advertisementMedia.UploadMediaFile(file)
-                    };
+                        var mediaFile = new AdvertisementMediaFile
+                        {
+                            AdvertisementId = advertisement.Id,
+                            Url = await _advertisementMedia.UploadMediaFile(file)
+                        };
 
-                    if (mediaFile != null)
-                    {
-                        await _advertisementMedia.CreateMediaFile(mediaFile);
+                        if (mediaFile != null)
+                        {
+                            await _advertisementMedia.CreateMediaFile(mediaFile);
+                        }
                     }
                 }
+    
                 return Ok(advertisement);
             }
             catch (Exception errorCreating)
