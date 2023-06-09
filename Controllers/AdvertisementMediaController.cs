@@ -5,6 +5,6 @@ namespace ClassyAdsServer.Controllers
 {
     public class AdvertisementMediaController : Controller
     {
-    
+        
     }
 }

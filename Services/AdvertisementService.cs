@@ -19,28 +19,31 @@ namespace MyAds.Services
             return await _database.Advertisements.ToListAsync();
         }
 
-        public async Task<IEnumerable<Advertisement>> GetAdvertisementsByFilter(string filter, int? categoryId)
+        public async Task<IEnumerable<Advertisement>> GetAdvertisementsByFilter(string? filter, int? categoryId)
         {
-            var Advertisements = _database.Advertisements
+            var advertisements = _database.Advertisements
                 .Include(c => c.Category)
                 .Include(c => c.User)
                 .AsNoTracking();
 
 
-            Advertisements = Advertisements.Where(c =>
-                c.Title.Contains(filter) ||
-                c.ShortDescription.Contains(filter) ||
-                c.Description.Contains(filter) ||
-                c.User!.Username.Contains(filter) ||
-                c.User.EmailAddress != null && c.User.EmailAddress.Contains(filter)
-            );
+            if (filter != null)
+            {
+                advertisements = advertisements.Where(c =>
+                      c.Title.Contains(filter) ||
+                      c.ShortDescription.Contains(filter) ||
+                      c.Description.Contains(filter) ||
+                      c.User!.Username.Contains(filter) ||
+                      c.User.EmailAddress != null && c.User.EmailAddress.Contains(filter)
+                  );
+            }
 
             if (categoryId != null)
             {
-                Advertisements = Advertisements.Where(c => c.CategoryId == categoryId);
+                advertisements = advertisements.Where(c => c.CategoryId == categoryId);
             }
 
-            return await Advertisements.ToListAsync();
+            return await advertisements.ToListAsync();
         }
 
         public async Task<Advertisement?> GetAdvertisementById(int AdvertisementId)

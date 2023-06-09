@@ -17,6 +17,7 @@ namespace MyAds.Entities
         [Column("advertisement_id")]
         public int AdvertisementId { get; set; }
 
+        [Required]
         [ForeignKey("User")]
         [Column("user_id")]
         public int UserId { get; set; }

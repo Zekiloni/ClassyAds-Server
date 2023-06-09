@@ -44,6 +44,11 @@ namespace MyAds.Entities
         [Column("is_email_verified")]
         public bool IsEmailConfirmed { get; set; }
 
+        [DefaultValue(null)]
+        [MaxLength(128)]
+        [Column("profile_image_url")]
+        public string? ProfileImage { get; set; }
+
         [MaxLength(20)]
         [DefaultValue(null)]
         [Column("phone")]
@@ -51,8 +56,8 @@ namespace MyAds.Entities
 
         [MaxLength(100)]
         [DefaultValue(null)]
-        [Column("street")]
-        public string? Street { get; set; }
+        [Column("address")]
+        public string? Address { get; set; }
 
         [MaxLength(50)]
         [DefaultValue(null)]

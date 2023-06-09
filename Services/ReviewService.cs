@@ -1,4 +1,5 @@
 ﻿using ClassyAdsServer.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using MyAds.Entities;
 
 namespace ClassyAdsServer.Services
@@ -25,14 +26,21 @@ namespace ClassyAdsServer.Services
             await _database.SaveChangesAsync();
         }
 
-        public Task<Review> GetReviewById(int reviewId)
+        public Task<IEnumerable<Review>> GetAllReviews()
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Review>> GetReviewsByAdvertisementId(int advertisementId)
+        public async Task<Review?> GetReviewById(int reviewId)
         {
-            throw new NotImplementedException();
+            return await _database.Reviews.FirstOrDefaultAsync(r => r.Id == reviewId);
+        }
+
+        public async Task<IEnumerable<Review>> GetReviewsByAdvertisementId(int advertisementId)
+        {
+            return await _database.Reviews
+                .Where(r => r.AdvertisementId == advertisementId)
+                .ToListAsync();
         }
     }
 }

@@ -30,7 +30,8 @@ namespace ClassyAdsServer.Migrations
                         .HasColumnName("amount");
 
                     b.Property<int>("CategoryId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("category_id");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)")
@@ -85,7 +86,8 @@ namespace ClassyAdsServer.Migrations
                         .HasColumnName("updated_date");
 
                     b.Property<int>("UserId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("user_id");
 
                     b.HasKey("Id");
 
@@ -175,7 +177,8 @@ namespace ClassyAdsServer.Migrations
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("longtext")
+                        .HasColumnName("description");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)")
@@ -187,10 +190,13 @@ namespace ClassyAdsServer.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(64)
+                        .HasColumnType("varchar(64)")
+                        .HasColumnName("title");
 
                     b.Property<int>("UserId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("user_id");
 
                     b.HasKey("Id");
 
@@ -207,7 +213,8 @@ namespace ClassyAdsServer.Migrations
                         .HasColumnName("id");
 
                     b.Property<int>("AdvertisementId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("advertisement_id");
 
                     b.Property<string>("Comment")
                         .IsRequired()
@@ -224,7 +231,8 @@ namespace ClassyAdsServer.Migrations
                         .HasColumnName("rating");
 
                     b.Property<int>("UserId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("user_id");
 
                     b.HasKey("Id");
 
@@ -241,6 +249,11 @@ namespace ClassyAdsServer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("id");
+
+                    b.Property<string>("Address")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("address");
 
                     b.Property<string>("City")
                         .HasMaxLength(50)
@@ -296,6 +309,11 @@ namespace ClassyAdsServer.Migrations
                         .HasColumnType("varchar(10)")
                         .HasColumnName("postal_code");
 
+                    b.Property<string>("ProfileImage")
+                        .HasMaxLength(128)
+                        .HasColumnType("varchar(128)")
+                        .HasColumnName("profile_image_url");
+
                     b.Property<string>("Province")
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)")
@@ -304,11 +322,6 @@ namespace ClassyAdsServer.Migrations
                     b.Property<int>("Role")
                         .HasColumnType("int")
                         .HasColumnName("role");
-
-                    b.Property<string>("Street")
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)")
-                        .HasColumnName("street");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)")

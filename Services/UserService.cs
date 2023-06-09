@@ -55,5 +55,10 @@ namespace MyAds.Services
 
             return user?.Advertisements;
         }
+
+        public async Task<User?> GetUserByEmail(string email)
+        {
+            return await _database.Users.FirstOrDefaultAsync(u => u.EmailAddress == email);
+        }
     }
 }

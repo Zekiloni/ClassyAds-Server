@@ -43,7 +43,7 @@ namespace MyAds.Controllers
                 Results = advertisementsCurrentPage
             };
 
-            return Ok(pagedOutput);
+            return StatusCode((int)HttpStatusCode.OK, pagedOutput);
         }
 
         [HttpGet("/advertisements/{advertisementId}")]
