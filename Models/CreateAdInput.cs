@@ -16,6 +16,5 @@ namespace MyAds.Models
         public string Description { get; set; }
 
         public List<IFormFile>? MediaFiles { get; set; }
-
     }
 }

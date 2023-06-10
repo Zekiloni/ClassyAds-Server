@@ -96,6 +96,7 @@ namespace MyAds.Controllers
                 {
                     foreach (var file in newAdvertisement.MediaFiles)
                     {
+
                         var mediaFile = new AdvertisementMediaFile
                         {
                             AdvertisementId = advertisement.Id,

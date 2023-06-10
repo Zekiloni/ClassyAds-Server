@@ -1,7 +1,11 @@
 ﻿
 using ClassyAdsServer.Interfaces;
+using ClassyAdsServer.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyAds.Entities;
+using MyAds.Interfaces;
+using System.Net;
 
 namespace ClassyAdsServer.Controllers
 {
@@ -9,11 +13,14 @@ namespace ClassyAdsServer.Controllers
     public class ReviewController : ControllerBase
     {
         private readonly IReviewService _reviewService;
+        private readonly IUserService _userService;
+        private readonly IAdvertisementService _advertisementService;
 
-        public ReviewController(IReviewService reviewService) { 
+        public ReviewController(IReviewService reviewService, IUserService userService) 
+        { 
             _reviewService = reviewService;
+            _userService = userService;
         }
-
 
         [HttpGet("/reviews")]
         public async Task<IActionResult> GetAllReviews() {
@@ -22,10 +29,69 @@ namespace ClassyAdsServer.Controllers
             return Ok(reviews);
         }
 
-        [HttpPost("/review")]
-        public async Task<IActionResult> CreateReview()
+        [Authorize]
+        [HttpPost("/reviews/create")]
+        public async Task<IActionResult> CreateReview(CreateReviewInput newReview)
         {
-            return Ok(null);
+            var loggedUser = await _userService.GetUserById((int)HttpContext.Items["UserId"]!);
+
+            if (loggedUser == null)
+            {
+                return Unauthorized();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var advertisement = await _advertisementService.GetAdvertisementById(newReview.AdvertisementId);
+
+            if (advertisement == null)
+            {
+                return NotFound("Advertisement not found.");
+            }
+
+            var review = new Review
+            {
+                UserId = loggedUser.Id,
+                Rating = newReview.Rating,
+                Comment = newReview.Comment,
+                AdvertisementId = advertisement.Id
+            };
+
+            await _reviewService.CreateReview(review);
+
+            return Ok(review);
+        }
+
+
+        [Authorize]
+        [HttpDelete("/reviews/delete")]
+        public async Task<IActionResult> DeleteReview(int reviewId)
+        {
+            var loggedUser = await _userService.GetUserById((int)HttpContext.Items["UserId"]!);
+
+            if (loggedUser == null)
+            {
+                return Unauthorized("LoggedUserNotFound");
+            }
+
+            var review = await _reviewService.GetReviewById(reviewId);
+
+            if (review == null)
+            {
+                return NotFound("ReviewNotFound");
+            }
+
+            if (review.UserId != loggedUser.Id && loggedUser.IsAdmin == false)
+            {
+                return Unauthorized();
+            }
+
+            await _reviewService.DeleteReview(review);
+
+            return Ok();
         }
     }
 }
