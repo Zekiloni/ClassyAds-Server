@@ -21,6 +21,7 @@ namespace MyAds.Services
         public async Task<Category?> GetCategoryById(int categoryId)
         {
             return await _database.Categories.FirstOrDefaultAsync(c => c.Id == categoryId);
+
         }
 
         public async Task CreateCategory(Category category)

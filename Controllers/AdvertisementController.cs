@@ -82,7 +82,8 @@ namespace MyAds.Controllers
                     Title = newAdvertisement.Title,
                     ShortDescription = newAdvertisement.ShortDescription,
                     Description = newAdvertisement.Description,
-                    UserId = user.Id
+                    UserId = user.Id,
+                    Status = Enums.AdvertisementStatus.Active,
                 };
 
                 if (advertisement == null)

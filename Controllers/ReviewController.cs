@@ -16,10 +16,11 @@ namespace ClassyAdsServer.Controllers
         private readonly IUserService _userService;
         private readonly IAdvertisementService _advertisementService;
 
-        public ReviewController(IReviewService reviewService, IUserService userService) 
+        public ReviewController(IReviewService reviewService, IUserService userService, IAdvertisementService advertisementService) 
         { 
             _reviewService = reviewService;
             _userService = userService;
+            _advertisementService = advertisementService;
         }
 
         [HttpGet("/reviews")]
@@ -64,7 +65,6 @@ namespace ClassyAdsServer.Controllers
 
             return Ok(review);
         }
-
 
         [Authorize]
         [HttpDelete("/reviews/delete")]

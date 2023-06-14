@@ -74,8 +74,8 @@ namespace MyAds.Entities
         [Column("user_id")]
         public int UserId { get; set; }
 
-        public virtual User User { get; set; }
+        public virtual User? User { get; set; }
 
-        public virtual Category Category { get; set; }
+        public virtual Category? Category { get; set; }
     }
 }

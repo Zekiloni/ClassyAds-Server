@@ -46,9 +46,9 @@ namespace MyAds.Services
             return await advertisements.ToListAsync();
         }
 
-        public async Task<Advertisement?> GetAdvertisementById(int AdvertisementId)
+        public async Task<Advertisement?> GetAdvertisementById(int advertisementId)
         {
-            return await _database.Advertisements.FirstOrDefaultAsync(Advertisement => Advertisement.Id == AdvertisementId);
+            return await _database.Advertisements.FirstOrDefaultAsync(advertisement => advertisement.Id == advertisementId);
         }
 
         public async Task CreateAdvertisement(Advertisement Advertisement)

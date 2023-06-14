@@ -11,18 +11,18 @@ namespace MyAds.Controllers
     [ApiController]
     public class CategoryController : ControllerBase
     {
-        private readonly ICategoryService _categories;
-        private readonly IUserService _users;
+        private readonly ICategoryService _categoryService;
+        private readonly IUserService _userService;
 
-        public CategoryController(ICategoryService categories, IUserService users) {
-            _categories = categories;
-            _users = users;
+        public CategoryController(ICategoryService categoryService, IUserService userService) {
+            _categoryService = categoryService;
+            _userService = userService;
         }
 
         [HttpGet("/categories")]
         public async Task<IActionResult> GetAllCategories()
         {
-            var categories = await _categories.GetCategories();
+            var categories = await _categoryService.GetCategories();
 
             if (categories == null)
             {
@@ -30,6 +30,19 @@ namespace MyAds.Controllers
             }
 
             return Ok(categories);
+        }
+
+        [HttpGet("/categories/{categoryId}")]
+        public async Task<IActionResult> GetCategoryById(int categoryId)
+        {
+            var category = await _categoryService.GetCategoryById(categoryId);
+
+            if (category == null)
+            {
+                return NotFound("CategoryNotFound");
+            }
+
+            return Ok(category);
         }
 
         [Authorize]
@@ -41,7 +54,7 @@ namespace MyAds.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = await _users.GetUserById((int)HttpContext.Items["UserId"]!);
+            var user = await _userService.GetUserById((int)HttpContext.Items["UserId"]!);
 
             if (user == null)
             {
@@ -56,7 +69,7 @@ namespace MyAds.Controllers
                 return StatusCode((int)HttpStatusCode.Unauthorized, new ErrorResponse("You are not authorized.", null));
             }
 
-            var parentCategory = newCategory.ParentCategoryId != null ? (await _categories.GetCategoryById(newCategory.ParentCategoryId.Value)) : null;
+            var parentCategory = newCategory.ParentCategoryId != null ? (await _categoryService.GetCategoryById(newCategory.ParentCategoryId.Value)) : null;
 
             var category = new Category
             {
@@ -65,7 +78,7 @@ namespace MyAds.Controllers
                 ParentCategoryId = parentCategory?.Id
             };
 
-            await _categories.CreateCategory(category);
+            await _categoryService.CreateCategory(category);
 
             return Ok(category);
         }
@@ -81,14 +94,14 @@ namespace MyAds.Controllers
         [HttpDelete("/categories/{id}")]
         public async Task<IActionResult> DeleteCategory(int id)
         {
-            var category = await _categories.GetCategoryById(id);
+            var category = await _categoryService.GetCategoryById(id);
 
             if (category == null)
             {
                 return NotFound();
             }
 
-            await _categories.DeleteCategory(category);
+            await _categoryService.DeleteCategory(category);
 
             return Ok();
         }

@@ -4,13 +4,14 @@ using Microsoft.IdentityModel.Tokens;
 using MyAds.Interfaces;
 using MyAds.Middlewares;
 using MyAds.Services;
-using MySql.EntityFrameworkCore.Infrastructure.Internal;
 using System.Text;
+using System.Text.Json.Serialization;
 
 
 IConfigurationRoot configuration = new ConfigurationBuilder()
        .SetBasePath(Directory.GetCurrentDirectory())
        .AddJsonFile("appsettings.json")
+       .AddJsonFile("Configs/adConfig.json")
        .Build();
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,6 +27,11 @@ builder.Services.AddDbContextPool<DatabaseContext>(options =>
     });
 });
 
+builder.Services.AddControllers()
+        .AddJsonOptions(options =>
+        {
+            options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+        });
 
 // Application services
 builder.Services.AddScoped<IUserService, UserService>();
