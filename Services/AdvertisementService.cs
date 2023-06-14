@@ -46,6 +46,16 @@ namespace MyAds.Services
             return await advertisements.ToListAsync();
         }
 
+        public async Task<IEnumerable<Advertisement>> GetRecentAdvertisements(int limit)
+        {
+            return await _database.Advertisements
+                .Include(c => c.Category)
+                .Include(c => c.User)
+                .OrderByDescending(c => c.CreatedAt)
+                .Take(limit)
+                .ToListAsync();
+        }
+
         public async Task<Advertisement?> GetAdvertisementById(int advertisementId)
         {
             return await _database.Advertisements.FirstOrDefaultAsync(advertisement => advertisement.Id == advertisementId);

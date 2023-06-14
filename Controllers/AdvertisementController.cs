@@ -5,27 +5,42 @@ using MyAds.Entities;
 using MyAds.Models;
 using System.Net;
 using ClassyAdsServer.Models;
+using MyAds.Services;
 
 namespace MyAds.Controllers
 {
     [ApiController]
     public class AdvertisementController : ControllerBase
     {
-        private readonly IAdvertisementService _advertisements;
+        private readonly IAdvertisementService _advertisementService;
         private readonly IUserService _users;
         private readonly IAdvertisementMediaService _advertisementMedia;
 
-        public AdvertisementController(IAdvertisementService advertisements, IUserService users, IAdvertisementMediaService media)
+        public AdvertisementController(IAdvertisementService advertisementService, IUserService users, IAdvertisementMediaService media)
         {
             _users = users;
-            _advertisements = advertisements;
+            _advertisementService = advertisementService;
             _advertisementMedia = media;
+        }
+
+        [HttpGet("/advertisements/recent")]
+        public async Task<IActionResult> GetRecentAdvertisements(int limit) {
+            try
+            {
+                var advertisements = await _advertisementService.GetRecentAdvertisements(limit);
+                return Ok(advertisements);
+            }
+            catch (Exception ex)
+            {
+                
+                return StatusCode(500, "An error occurred while retrieving recent advertisements.");
+            }
         }
 
         [HttpPost("/advertisements/search")]
         public async Task<IActionResult> SearchAdvertisements(AdvertisementSearchInput searchAdvertisement)
         {
-            var advertisements = await _advertisements.GetAdvertisementsByFilter(searchAdvertisement.Filter, searchAdvertisement.CategoryId);
+            var advertisements = await _advertisementService.GetAdvertisementsByFilter(searchAdvertisement.Filter, searchAdvertisement.CategoryId);
 
             var totalNumberOfRecords = advertisements.Count();
             var totalNumberOfPages = (int)Math.Ceiling((double)totalNumberOfRecords / searchAdvertisement.PageSize);
@@ -49,7 +64,7 @@ namespace MyAds.Controllers
         [HttpGet("/advertisements/{advertisementId}")]
         public async Task<IActionResult> GetAdvertisementById(int advertisementId)
         {
-            var advertisement = await _advertisements.GetAdvertisementById(advertisementId);
+            var advertisement = await _advertisementService.GetAdvertisementById(advertisementId);
 
             if (advertisement == null)
             {
@@ -91,7 +106,7 @@ namespace MyAds.Controllers
                     return BadRequest();
                 }
 
-                await _advertisements.CreateAdvertisement(advertisement);
+                await _advertisementService.CreateAdvertisement(advertisement);
 
                 if (newAdvertisement.MediaFiles != null)
                 {
@@ -124,7 +139,7 @@ namespace MyAds.Controllers
         public async Task<IActionResult> DeleteAdvertisement(int advertisementId)
         {
             var user = await _users.GetUserById((int)HttpContext.Items["UserId"]!);
-            var advertisement = await _advertisements.GetAdvertisementById(advertisementId);
+            var advertisement = await _advertisementService.GetAdvertisementById(advertisementId);
 
             if (advertisement == null || user == null)
             {
@@ -136,7 +151,7 @@ namespace MyAds.Controllers
                 return Unauthorized();
             }
 
-            await _advertisements.DeleteAdvertisement(advertisement);
+            await _advertisementService.DeleteAdvertisement(advertisement);
 
             return Ok();
         }
