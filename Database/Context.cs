@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ClassyAdsServer.Entities;
+using Microsoft.EntityFrameworkCore;
 using MyAds.Entities;
 
 
@@ -18,6 +19,8 @@ public class DatabaseContext : DbContext
 
     public DbSet<Review> Reviews { get; set; }
 
+    public DbSet<Message> Messages { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Advertisement>()
@@ -36,6 +39,18 @@ public class DatabaseContext : DbContext
             .HasOne(c => c.ParentCategory)
             .WithMany(c => c.ChildCategories)
             .HasForeignKey(c => c.ParentCategoryId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Message>()
+           .HasOne(m => m.Sender)
+           .WithMany()
+           .HasForeignKey(m => m.SenderId)
+           .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Message>()
+            .HasOne(m => m.Target)
+            .WithMany()
+            .HasForeignKey(m => m.TargetId)
             .OnDelete(DeleteBehavior.Restrict);
 
         base.OnModelCreating(modelBuilder);
