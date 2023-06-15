@@ -1,8 +1,8 @@
 ﻿
-using MyAds.Entities;
-using MyAds.Interfaces;
+using ClassyAdsServer.Entities;
+using ClassyAdsServer.Interfaces;
 
-namespace MyAds.Services
+namespace ClassyAdsServer.Services
 {
     public class NotificationService : INotificationService
     {

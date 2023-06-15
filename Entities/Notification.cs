@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace MyAds.Entities
+namespace ClassyAdsServer.Entities
 {
     [Table("notifications")]
     public class Notification

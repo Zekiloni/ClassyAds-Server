@@ -1,6 +1,6 @@
-﻿using MyAds.Enums;
+﻿using ClassyAdsServer.Enums;
 
-namespace MyAds.Models
+namespace ClassyAdsServer.Models
 {
     public class UserPublicViewOutput
     {

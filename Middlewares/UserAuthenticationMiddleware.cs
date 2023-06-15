@@ -6,7 +6,7 @@ using System.Text;
 using System.Net;
 
 
-namespace MyAds.Middlewares
+namespace ClassyAdsServer.Middlewares
 {
     public class UserAuthenticationMiddleware
     {

@@ -1,12 +1,12 @@
 ﻿using ClassyAdsServer.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MyAds.Entities;
-using MyAds.Interfaces;
-using MyAds.Models;
+using ClassyAdsServer.Entities;
+using ClassyAdsServer.Interfaces;
+using ClassyAdsServer.Models;
 using System.Net;
 
-namespace MyAds.Controllers
+namespace ClassyAdsServer.Controllers
 {
     [ApiController]
     public class CategoryController : ControllerBase

@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
 
-namespace MyAds.Entities
+namespace ClassyAdsServer.Entities
 {
     [Table("authorization_logs")]
     public class AuthorizationLog

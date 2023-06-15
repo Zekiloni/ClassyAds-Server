@@ -1,4 +1,4 @@
-﻿namespace MyAds.Interfaces
+﻿namespace ClassyAdsServer.Interfaces
 {
     public interface IUserAuthenticationMiddleware
     {

@@ -18,7 +18,7 @@ namespace ClassyAdsServer.Migrations
                 .HasAnnotation("ProductVersion", "7.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("MyAds.Entities.Advertisement", b =>
+            modelBuilder.Entity("ClassyAdsServer.Entities.Advertisement", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -98,7 +98,7 @@ namespace ClassyAdsServer.Migrations
                     b.ToTable("advertisements");
                 });
 
-            modelBuilder.Entity("MyAds.Entities.AdvertisementMediaFile", b =>
+            modelBuilder.Entity("ClassyAdsServer.Entities.AdvertisementMediaFile", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -126,7 +126,7 @@ namespace ClassyAdsServer.Migrations
                     b.ToTable("advertisement_media_files");
                 });
 
-            modelBuilder.Entity("MyAds.Entities.Category", b =>
+            modelBuilder.Entity("ClassyAdsServer.Entities.Category", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -168,7 +168,7 @@ namespace ClassyAdsServer.Migrations
                     b.ToTable("categories");
                 });
 
-            modelBuilder.Entity("MyAds.Entities.Notification", b =>
+            modelBuilder.Entity("ClassyAdsServer.Entities.Notification", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -205,7 +205,7 @@ namespace ClassyAdsServer.Migrations
                     b.ToTable("notifications");
                 });
 
-            modelBuilder.Entity("MyAds.Entities.Review", b =>
+            modelBuilder.Entity("ClassyAdsServer.Entities.Review", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -243,7 +243,7 @@ namespace ClassyAdsServer.Migrations
                     b.ToTable("reviews");
                 });
 
-            modelBuilder.Entity("MyAds.Entities.User", b =>
+            modelBuilder.Entity("ClassyAdsServer.Entities.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -341,15 +341,15 @@ namespace ClassyAdsServer.Migrations
                     b.ToTable("users");
                 });
 
-            modelBuilder.Entity("MyAds.Entities.Advertisement", b =>
+            modelBuilder.Entity("ClassyAdsServer.Entities.Advertisement", b =>
                 {
-                    b.HasOne("MyAds.Entities.Category", "Category")
+                    b.HasOne("ClassyAdsServer.Entities.Category", "Category")
                         .WithMany("Advertisements")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyAds.Entities.User", "User")
+                    b.HasOne("ClassyAdsServer.Entities.User", "User")
                         .WithMany("Advertisements")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -360,18 +360,18 @@ namespace ClassyAdsServer.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("MyAds.Entities.Category", b =>
+            modelBuilder.Entity("ClassyAdsServer.Entities.Category", b =>
                 {
-                    b.HasOne("MyAds.Entities.Category", "ParentCategory")
+                    b.HasOne("ClassyAdsServer.Entities.Category", "ParentCategory")
                         .WithMany("ChildCategories")
                         .HasForeignKey("ParentCategoryId");
 
                     b.Navigation("ParentCategory");
                 });
 
-            modelBuilder.Entity("MyAds.Entities.Notification", b =>
+            modelBuilder.Entity("ClassyAdsServer.Entities.Notification", b =>
                 {
-                    b.HasOne("MyAds.Entities.User", "User")
+                    b.HasOne("ClassyAdsServer.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -380,15 +380,15 @@ namespace ClassyAdsServer.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("MyAds.Entities.Review", b =>
+            modelBuilder.Entity("ClassyAdsServer.Entities.Review", b =>
                 {
-                    b.HasOne("MyAds.Entities.Advertisement", "Advertisement")
+                    b.HasOne("ClassyAdsServer.Entities.Advertisement", "Advertisement")
                         .WithMany()
                         .HasForeignKey("AdvertisementId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MyAds.Entities.User", "User")
+                    b.HasOne("ClassyAdsServer.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -399,14 +399,14 @@ namespace ClassyAdsServer.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("MyAds.Entities.Category", b =>
+            modelBuilder.Entity("ClassyAdsServer.Entities.Category", b =>
                 {
                     b.Navigation("Advertisements");
 
                     b.Navigation("ChildCategories");
                 });
 
-            modelBuilder.Entity("MyAds.Entities.User", b =>
+            modelBuilder.Entity("ClassyAdsServer.Entities.User", b =>
                 {
                     b.Navigation("Advertisements");
                 });

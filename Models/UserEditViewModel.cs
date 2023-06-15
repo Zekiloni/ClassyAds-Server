@@ -1,9 +1,9 @@
-﻿using MyAds.Enums;
+﻿using ClassyAdsServer.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 
 
-namespace MyAds.Models
+namespace ClassyAdsServer.Models
 {
     public class UserEditViewModel
     {

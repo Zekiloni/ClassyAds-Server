@@ -1,6 +1,6 @@
-﻿using MyAds.Entities;
+﻿using ClassyAdsServer.Entities;
 
-namespace MyAds.Interfaces
+namespace ClassyAdsServer.Interfaces
 {
     public interface ICategoryService
     {

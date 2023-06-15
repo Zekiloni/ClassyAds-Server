@@ -1,10 +1,10 @@
-﻿using MyAds.Entities;
-using MyAds.Interfaces;
+﻿using ClassyAdsServer.Entities;
+using ClassyAdsServer.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using System;
 using Microsoft.EntityFrameworkCore;
 
-namespace MyAds.Services
+namespace ClassyAdsServer.Services
 {
     public class AdvertisementMediaFileService : IAdvertisementMediaService
     {

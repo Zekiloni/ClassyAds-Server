@@ -1,6 +1,6 @@
 ﻿using ClassyAdsServer.Entities;
 using Microsoft.EntityFrameworkCore;
-using MyAds.Entities;
+using ClassyAdsServer.Entities;
 
 
 public class DatabaseContext : DbContext

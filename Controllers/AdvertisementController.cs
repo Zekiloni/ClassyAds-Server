@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MyAds.Interfaces;
-using MyAds.Entities;
-using MyAds.Models;
+using ClassyAdsServer.Interfaces;
+using ClassyAdsServer.Entities;
+using ClassyAdsServer.Models;
 using System.Net;
 using ClassyAdsServer.Models;
-using MyAds.Services;
+using ClassyAdsServer.Services;
 
-namespace MyAds.Controllers
+namespace ClassyAdsServer.Controllers
 {
     [ApiController]
     public class AdvertisementController : ControllerBase

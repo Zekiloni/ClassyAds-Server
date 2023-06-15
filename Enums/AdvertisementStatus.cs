@@ -1,4 +1,4 @@
-﻿namespace MyAds.Enums
+﻿namespace ClassyAdsServer.Enums
 {
     public enum AdvertisementStatus
     {

@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 
-namespace MyAds.Entities
+namespace ClassyAdsServer.Entities
 {
     [Table("categories")]
     public class Category

@@ -1,4 +1,4 @@
-﻿namespace MyAds.Models
+﻿namespace ClassyAdsServer.Models
 {
     public class PagedOutput<T>
     {

@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MyAds.Entities;
-using MyAds.Interfaces;
+using ClassyAdsServer.Entities;
+using ClassyAdsServer.Interfaces;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
-namespace MyAds.Services
+namespace ClassyAdsServer.Services
 {
     public class AdvertisementService : IAdvertisementService
     {

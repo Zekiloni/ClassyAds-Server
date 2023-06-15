@@ -1,9 +1,9 @@
-﻿using MyAds.Enums;
+﻿using ClassyAdsServer.Enums;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace MyAds.Entities
+namespace ClassyAdsServer.Entities
 {
     [Table("advertisements")]
     public class Advertisement

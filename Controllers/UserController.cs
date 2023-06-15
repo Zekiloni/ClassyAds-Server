@@ -1,16 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MyAds.Interfaces;
-using MyAds.Entities;
+using ClassyAdsServer.Interfaces;
+using ClassyAdsServer.Entities;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using MyAds.Models;
+using ClassyAdsServer.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Net;
 using ClassyAdsServer.Models;
 
-namespace MyAds.Controllers
+namespace ClassyAdsServer.Controllers
 {
     [ApiController]
     public class UserController : ControllerBase

@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using MyAds.Interfaces;
-using MyAds.Middlewares;
-using MyAds.Services;
+using ClassyAdsServer.Interfaces;
+using ClassyAdsServer.Middlewares;
+using ClassyAdsServer.Services;
 using System.Text;
 using System.Text.Json.Serialization;
 

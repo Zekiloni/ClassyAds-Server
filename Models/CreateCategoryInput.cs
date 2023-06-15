@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MyAds.Models
+namespace ClassyAdsServer.Models
 {
     public class CreateCategoryInput
     {
