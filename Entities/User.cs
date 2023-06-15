@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ClassyAdsServer.Entities;
+using Microsoft.EntityFrameworkCore;
 using MyAds.Enums;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -98,6 +99,8 @@ namespace MyAds.Entities
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         public List<Advertisement>? Advertisements { get; set; }
+
+        public List<Message>? Messages { get; set; }
 
         public bool IsAdmin
         {
