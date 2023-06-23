@@ -49,11 +49,14 @@ namespace ClassyAdsServer.Services
 
         public async Task<IEnumerable<Advertisement>> GetRecentAdvertisements(int limit)
         {
+            int totalAdvertisements = await _database.Advertisements.CountAsync();
+            int actualLimit = Math.Min(limit, totalAdvertisements);
+
             return await _database.Advertisements
                 .Include(c => c.Category)
                 .Include(c => c.User)
                 .OrderByDescending(c => c.CreatedAt)
-                .Take(limit)
+                .Take(actualLimit)
                 .ToListAsync();
         }
 

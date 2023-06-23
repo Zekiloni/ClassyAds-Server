@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ClassyAdsServer.Interfaces;
 using ClassyAdsServer.Entities;
 using ClassyAdsServer.Models;
-using System.Net;
-using ClassyAdsServer.Services;
+
 
 namespace ClassyAdsServer.Controllers
 {
@@ -25,15 +25,14 @@ namespace ClassyAdsServer.Controllers
         }
 
         [HttpGet("/advertisements/recent")]
-        public async Task<IActionResult> GetRecentAdvertisements(int limit) {
+        public async Task<IActionResult> GetRecentAdvertisements(int? limit) {
             try
             {
-                var advertisements = await _advertisementService.GetRecentAdvertisements(limit);
+                var advertisements = await _advertisementService.GetRecentAdvertisements(limit ?? 15);
                 return Ok(advertisements);
             }
             catch (Exception ex)
             {
-                
                 return StatusCode((int)HttpStatusCode.InternalServerError, "An error occurred while retrieving recent advertisements.");
             }
         }
