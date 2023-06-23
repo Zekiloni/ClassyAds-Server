@@ -16,9 +16,10 @@ namespace ClassyAdsServer.Controllers
         private readonly ICategoryService _categoryService;
         private readonly IAdvertisementMediaService _advertisementMedia;
 
-        public AdvertisementController(IAdvertisementService advertisementService, IUserService users, IAdvertisementMediaService media)
+        public AdvertisementController(ICategoryService categoryService, IAdvertisementService advertisementService, IUserService users, IAdvertisementMediaService media)
         {
             _users = users;
+            _categoryService = categoryService;
             _advertisementService = advertisementService;
             _advertisementMedia = media;
         }
@@ -78,7 +79,7 @@ namespace ClassyAdsServer.Controllers
         [HttpPost("/advertisements/create")]
         public async Task<IActionResult> CreateAdvertisement(CreateAdvertisementInput newAdvertisement)
         {
-            var user = _users.GetUserById((int)HttpContext.Items["UserId"]!);
+            var user = await _users.GetUserById((int)HttpContext.Items["UserId"]!);
 
             if (!ModelState.IsValid)
             {
@@ -101,10 +102,10 @@ namespace ClassyAdsServer.Controllers
                 var advertisement = new Advertisement
                 {
                     CategoryId = adCategory.Id,
+                    UserId = user.Id,
                     Title = newAdvertisement.Title,
                     ShortDescription = newAdvertisement.ShortDescription,
                     Description = newAdvertisement.Description,
-                    UserId = user.Id,
                     Status = Enums.AdvertisementStatus.Active
                 };
 

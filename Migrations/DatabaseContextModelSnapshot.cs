@@ -155,7 +155,6 @@ namespace ClassyAdsServer.Migrations
                         .HasColumnName("category_name");
 
                     b.Property<int?>("ParentCategoryId")
-                        .IsRequired()
                         .HasColumnType("int")
                         .HasColumnName("parent_category_id");
 
@@ -409,8 +408,7 @@ namespace ClassyAdsServer.Migrations
                     b.HasOne("ClassyAdsServer.Entities.Category", "ParentCategory")
                         .WithMany("ChildCategories")
                         .HasForeignKey("ParentCategoryId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("ParentCategory");
                 });

@@ -13,6 +13,11 @@ namespace ClassyAdsServer.Entities
         public int Id { get; set; }
 
         [Required]
+        [ForeignKey("User")]
+        [Column("user_id")]
+        public int UserId { get; set; }
+
+        [Required]
         [ForeignKey("Category")]
         [Column("category_id")]
         public int CategoryId { get; set; }
@@ -69,13 +74,8 @@ namespace ClassyAdsServer.Entities
         [Column("updated_date")]
         public DateTime? UpdatedAt { get; set; }
 
-        [Required]
-        [ForeignKey("User")]
-        [Column("user_id")]
-        public int UserId { get; set; }
+        public virtual User User { get; set; }
 
-        public virtual User? User { get; set; }
-
-        public virtual Category? Category { get; set; }
+        public virtual Category Category { get; set; }
     }
 }
