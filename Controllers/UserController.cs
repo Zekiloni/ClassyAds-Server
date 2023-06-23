@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ClassyAdsServer.Interfaces;
-using ClassyAdsServer.Entities;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using ClassyAdsServer.Models;
-using Microsoft.AspNetCore.Authorization;
 using System.Net;
+using Microsoft.AspNetCore.Authorization;
 using ClassyAdsServer.Models;
+using ClassyAdsServer.Interfaces;
+using ClassyAdsServer.Entities;
+
 
 namespace ClassyAdsServer.Controllers
 {
@@ -53,21 +53,28 @@ namespace ClassyAdsServer.Controllers
         [HttpPost("/users/login")]
         public async Task<IActionResult> LoginUser(LoginUserInput loginUser)
         {
+            Console.WriteLine("Username is " + loginUser.Username);
             var user = await _users.GetUserByUsername(loginUser.Username);
+            Console.WriteLine("before user is null check");
 
             if (user == null)
             {
+                Console.WriteLine("user is null");
                 return StatusCode((int)HttpStatusCode.NotFound, new ErrorResponse("Username not found.", null));
             }
+
+            Console.WriteLine("yees");
 
             if (BCrypt.Net.BCrypt.Verify(loginUser.Password, user.HashedPassword))
             {
                 user.LastLoginAt = DateTime.Now;
                 await _users.UpdateUser(user);
+                Console.WriteLine("yees 2");
 
                 try
                 {
                     var token = CreateUserToken(user);
+
                     return Ok(new
                     {
                         user,
@@ -82,6 +89,8 @@ namespace ClassyAdsServer.Controllers
             }
             else
             {
+                Console.WriteLine("yees but no");
+
                 return StatusCode((int)HttpStatusCode.Unauthorized, new ErrorResponse("Incorrect password.", null));
             }
         }

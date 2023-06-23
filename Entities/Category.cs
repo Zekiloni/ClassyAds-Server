@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ClassyAdsServer.Entities
 {
@@ -22,6 +23,7 @@ namespace ClassyAdsServer.Entities
         public string Description { get; set; }
 
         [DefaultValue(null)]
+        [AllowNull]
         [ForeignKey("ParentCategory")]
         [Column("parent_category_id")]
         public int? ParentCategoryId { get; set; }

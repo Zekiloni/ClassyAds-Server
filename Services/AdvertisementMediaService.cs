@@ -3,6 +3,7 @@ using ClassyAdsServer.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using System;
 using Microsoft.EntityFrameworkCore;
+using ClassyAdsServer.Database;
 
 namespace ClassyAdsServer.Services
 {

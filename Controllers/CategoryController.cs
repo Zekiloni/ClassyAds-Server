@@ -1,9 +1,8 @@
-﻿using ClassyAdsServer.Models;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ClassyAdsServer.Models;
 using ClassyAdsServer.Entities;
 using ClassyAdsServer.Interfaces;
-using ClassyAdsServer.Models;
 using System.Net;
 
 namespace ClassyAdsServer.Controllers

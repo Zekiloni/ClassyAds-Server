@@ -1,4 +1,5 @@
-﻿using ClassyAdsServer.Entities;
+﻿using ClassyAdsServer.Database;
+using ClassyAdsServer.Entities;
 using ClassyAdsServer.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,7 +24,7 @@ namespace ClassyAdsServer.Services
             throw new NotImplementedException();
         }
 
-        public Task<List<Message>> GetAllMessages()
+        public async Task<List<Message>> GetAllMessages()
         {
             return await _database.Messages.ToListAsync();
         }

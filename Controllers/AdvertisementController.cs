@@ -4,7 +4,6 @@ using ClassyAdsServer.Interfaces;
 using ClassyAdsServer.Entities;
 using ClassyAdsServer.Models;
 using System.Net;
-using ClassyAdsServer.Models;
 using ClassyAdsServer.Services;
 
 namespace ClassyAdsServer.Controllers
@@ -14,6 +13,7 @@ namespace ClassyAdsServer.Controllers
     {
         private readonly IAdvertisementService _advertisementService;
         private readonly IUserService _users;
+        private readonly ICategoryService _categoryService;
         private readonly IAdvertisementMediaService _advertisementMedia;
 
         public AdvertisementController(IAdvertisementService advertisementService, IUserService users, IAdvertisementMediaService media)
@@ -89,16 +89,23 @@ namespace ClassyAdsServer.Controllers
                 return StatusCode((int)HttpStatusCode.Unauthorized, new ErrorResponse("You are not authorized.", null));
             }
 
+            var adCategory = await _categoryService.GetCategoryById(newAdvertisement.CategoryId);
+
+            if (adCategory == null)
+            {
+                return StatusCode((int)HttpStatusCode.NotFound, new ErrorResponse("Category not found"));
+            }
+
             try
             {
                 var advertisement = new Advertisement
                 {
-                    CategoryId = newAdvertisement.CategoryId,
+                    CategoryId = adCategory.Id,
                     Title = newAdvertisement.Title,
                     ShortDescription = newAdvertisement.ShortDescription,
                     Description = newAdvertisement.Description,
                     UserId = user.Id,
-                    Status = Enums.AdvertisementStatus.Active,
+                    Status = Enums.AdvertisementStatus.Active
                 };
 
                 if (advertisement == null)

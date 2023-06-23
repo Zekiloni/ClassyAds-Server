@@ -6,13 +6,15 @@ using ClassyAdsServer.Middlewares;
 using ClassyAdsServer.Services;
 using System.Text;
 using System.Text.Json.Serialization;
-
+using ClassyAdsServer.Database;
 
 IConfigurationRoot configuration = new ConfigurationBuilder()
        .SetBasePath(Directory.GetCurrentDirectory())
+       //.AddJsonFile("Configs/adConfig.json")
        .AddJsonFile("appsettings.json")
-       .AddJsonFile("Configs/adConfig.json")
        .Build();
+
+       //
 
 var builder = WebApplication.CreateBuilder(args);
 

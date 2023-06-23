@@ -8,7 +8,9 @@ namespace ClassyAdsServer.Models
         public string Message { get; set; }
         public string? Description { get; set; }
 
-        public ErrorResponse() { }
+        public ErrorResponse(string message) { 
+            Message = message;
+        }
 
         public ErrorResponse(string message, string? description)
         {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ClassyAdsServer.Entities;
 using ClassyAdsServer.Interfaces;
-
+using ClassyAdsServer.Database;
 
 namespace ClassyAdsServer.Services
 {
