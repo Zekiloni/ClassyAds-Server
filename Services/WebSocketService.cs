@@ -1,7 +1,4 @@
-﻿
-using ClassyAdsServer.Entities;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Net;
 using System.Net.WebSockets;
 using System.Text;
@@ -12,7 +9,6 @@ namespace ClassyAdsServer.Services
     {
         private readonly HttpListener _httpListener;
         private readonly ConcurrentDictionary<string, WebSocket> connectedClients;
-
 
         public void Start()
         {

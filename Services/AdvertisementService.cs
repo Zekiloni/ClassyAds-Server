@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ClassyAdsServer.Entities;
 using ClassyAdsServer.Interfaces;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using ClassyAdsServer.Database;
 
 namespace ClassyAdsServer.Services
