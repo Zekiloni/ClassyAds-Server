@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using ClassyAdsServer.Interfaces;
 using ClassyAdsServer.Entities;
 using ClassyAdsServer.Models;
-
+using ClassyAdsServer.Utils;
 
 namespace ClassyAdsServer.Controllers
 {
@@ -12,14 +12,14 @@ namespace ClassyAdsServer.Controllers
     public class AdvertisementController : ControllerBase
     {
         private readonly IAdvertisementService _advertisementService;
-        private readonly IUserService _users;
+        private readonly IUserService _userService;
         private readonly ICategoryService _categoryService;
         private readonly IAdvertisementMediaService _advertisementMedia;
 
         public AdvertisementController(ICategoryService categoryService, IAdvertisementService advertisementService, IUserService users, IAdvertisementMediaService media)
         {
-            _users = users;
             _categoryService = categoryService;
+            _userService = users;
             _advertisementService = advertisementService;
             _advertisementMedia = media;
         }
@@ -33,6 +33,7 @@ namespace ClassyAdsServer.Controllers
             }
             catch (Exception ex)
             {
+                LoggerUtil.Error(ex.Message);
                 return StatusCode((int)HttpStatusCode.InternalServerError, "An error occurred while retrieving recent advertisements.");
             }
         }
@@ -78,7 +79,7 @@ namespace ClassyAdsServer.Controllers
         [HttpPost("/advertisements/create")]
         public async Task<IActionResult> CreateAdvertisement(CreateAdvertisementInput newAdvertisement)
         {
-            var user = await _users.GetUserById((int)HttpContext.Items["UserId"]!);
+            var user = await _userService.GetUserById((int)HttpContext.Items["UserId"]!);
 
             if (!ModelState.IsValid)
             {
@@ -145,7 +146,7 @@ namespace ClassyAdsServer.Controllers
         [HttpDelete("/advertisements/delete/{advertisementId}")]
         public async Task<IActionResult> DeleteAdvertisement(int advertisementId)
         {
-            var user = await _users.GetUserById((int)HttpContext.Items["UserId"]!);
+            var user = await _userService.GetUserById((int)HttpContext.Items["UserId"]!);
             var advertisement = await _advertisementService.GetAdvertisementById(advertisementId);
 
             if (advertisement == null || user == null)

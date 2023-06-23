@@ -11,7 +11,7 @@ namespace ClassyAdsServer.Services
     public class WebSocketService
     {
         private readonly HttpListener _httpListener;
-        // private ConcurrentDictionary<string, WebSocket> connectedClients;
+        private readonly ConcurrentDictionary<string, WebSocket> connectedClients;
 
 
         public void Start()
@@ -53,9 +53,6 @@ namespace ClassyAdsServer.Services
                     var message = Encoding.UTF8.GetString(buffer, 0, receiveResult.Count);
                     Console.WriteLine("Received message: " + message);
 
-                    // Process the received message
-
-                    // Echo the message back to the client
                     await webSocket.SendAsync(new ArraySegment<byte>(buffer, 0, receiveResult.Count), WebSocketMessageType.Text, receiveResult.EndOfMessage, CancellationToken.None);
                 }
             }

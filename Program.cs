@@ -10,11 +10,8 @@ using ClassyAdsServer.Database;
 
 IConfigurationRoot configuration = new ConfigurationBuilder()
        .SetBasePath(Directory.GetCurrentDirectory())
-       //.AddJsonFile("Configs/adConfig.json")
        .AddJsonFile("appsettings.json")
        .Build();
-
-       //
 
 var builder = WebApplication.CreateBuilder(args);
 
